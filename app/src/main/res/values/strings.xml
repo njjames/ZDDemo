@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ZDDemo</string>
+
+    <string name="sale_name">销售单</string>
+    <string name="sale_search_name">销售单查询</string>
+    <string name="pan_name">盘点单</string>
+    <string name="part_name">配件管理</string>
+    <string name="clint_name">客户管理</string>
+    <string name="supply_name">供应商管理</string>
+    <string name="house_name">库存查询</string>
+</resources>
