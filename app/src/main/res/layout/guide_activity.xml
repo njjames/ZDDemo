@@ -12,6 +12,16 @@
         android:layout_height="match_parent">
 
     </android.support.v4.view.ViewPager>
+
+    <ImageView
+        android:id="@+id/iv_immeditate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/launcher_immediate_experience"
+        android:layout_above="@id/ll_indicator"
+        android:layout_marginBottom="@dimen/qb_px_50"
+        android:visibility="invisible"/>
     
     <LinearLayout
         android:id="@+id/ll_indicator"
@@ -20,7 +30,7 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="@dimen/qb_px_15">
 
     </LinearLayout>
 

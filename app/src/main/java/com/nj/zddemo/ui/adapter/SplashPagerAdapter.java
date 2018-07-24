@@ -11,10 +11,10 @@ import java.util.List;
  * Created by Administrator on 2018-07-23.
  */
 
-public class SplashAdapter extends PagerAdapter {
+public class SplashPagerAdapter extends PagerAdapter {
     private List<ImageView> mImageViewList;
 
-    public SplashAdapter(List<ImageView> imageViewList) {
+    public SplashPagerAdapter(List<ImageView> imageViewList) {
         mImageViewList = imageViewList;
     }
 
