@@ -1,9 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nj.zddemo.ui.activity.LoginActivity">
+    tools:context="com.nj.zddemo.ui.activity.LoginActivity"
+    android:orientation="vertical"
+    android:background="@drawable/back_login"
+    android:paddingLeft="@dimen/qb_px_26"
+    android:paddingRight="@dimen/qb_px_26">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_60"
+        android:src="@drawable/icon_logo"
+        android:layout_marginTop="@dimen/qb_px_40"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/login_title_color"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/qb_px_13"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ver 1.0.1"
+        android:textColor="@color/login_title_color"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:layout_marginBottom="@dimen/qb_px_20"/>
+
+    <EditText
+        android:id="@+id/et_login_name"
+        style="@style/LoginEditText"
+        android:hint="@string/login_name_hint"
+        android:drawableLeft="@drawable/ic_login_name"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_login_pass"
+            style="@style/LoginEditText"
+            android:hint="@string/login_pass_hint"
+            android:drawableLeft="@drawable/ic_login_pass"
+            android:inputType="textPassword"/>
+
+        <ImageView
+            android:id="@+id/iv_showpass"
+            android:layout_width="@dimen/qb_px_30"
+            android:layout_height="@dimen/qb_px_30"
+            android:src="@drawable/eye_off"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/et_login_pass"/>
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/cb_remember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_remember_name"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="@dimen/qb_px_10"
+        style="@style/MyCheckboxButton"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_40"
+        android:text="@string/login_btn_text"
+        android:textColor="@android:color/white"
+        android:background="@drawable/login_btn_selector"
+        android:layout_marginTop="@dimen/qb_px_20"
+        android:layout_marginLeft="@dimen/qb_px_10"
+        android:layout_marginRight="@dimen/qb_px_10"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/qb_px_15">
+
+        <TextView
+            android:id="@+id/tv_login_setip"
+            android:text="@string/login_setip_text"
+            style="@style/LoginSettingText" />
+
+        <View
+            android:layout_width="@dimen/qb_px_1"
+            android:layout_height="@dimen/qb_px_15"
+            android:background="@color/login_setting_color"/>
+
+        <TextView
+            android:id="@+id/tv_login_online"
+            android:text="@string/login_online_text"
+            style="@style/LoginSettingText"/>
+
+        <View
+            android:layout_width="@dimen/qb_px_1"
+            android:layout_height="@dimen/qb_px_15"
+            android:background="@color/login_setting_color"/>
+
+        <TextView
+            android:id="@+id/tv_login_imei"
+            android:text="@string/login_imei_text"
+            style="@style/LoginSettingText"/>
+
+        <View
+            android:layout_width="@dimen/qb_px_1"
+            android:layout_height="@dimen/qb_px_15"
+            android:background="@color/login_setting_color"/>
+
+        <TextView
+            android:id="@+id/tv_login_help"
+            android:text="@string/login_help_text"
+            style="@style/LoginSettingText"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo_title"
+        android:layout_marginBottom="@dimen/qb_px_20"/>
+
+</LinearLayout>

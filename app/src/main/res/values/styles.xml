@@ -8,4 +8,29 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="LoginEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/qb_px_40</item>
+        <item name="android:background">@drawable/login_edittext_bg</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:padding">@dimen/qb_px_10</item>
+        <item name="android:layout_marginTop">@dimen/qb_px_5</item>
+        <item name="android:drawablePadding">@dimen/qb_px_2</item>
+    </style>
+
+    <style name="MyCheckboxButton" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/login_checkbox_selector</item>
+    </style>
+
+    <style name="LoginSettingText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/login_setting_color</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
 </resources>

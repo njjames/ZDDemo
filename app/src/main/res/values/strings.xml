@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZDDemo</string>
+    <string name="app_name">中道移动办公</string>
 
     <string name="sale_name">销售单</string>
     <string name="sale_search_name">销售单查询</string>
@@ -8,4 +8,13 @@
     <string name="clint_name">客户管理</string>
     <string name="supply_name">供应商管理</string>
     <string name="house_name">库存查询</string>
+
+    <string name="login_name_hint">请输入操作员</string>
+    <string name="login_pass_hint">请输入密码</string>
+    <string name="login_remember_name">记住用户名</string>
+    <string name="login_btn_text">登录</string>
+    <string name="login_setip_text">设置IP</string>
+    <string name="login_online_text">在线人员</string>
+    <string name="login_imei_text">本机串号</string>
+    <string name="login_help_text">帮助</string>
 </resources>
