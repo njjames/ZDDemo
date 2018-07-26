@@ -65,4 +65,5 @@ public class SplashActivity extends AppCompatActivity {
             myHandler.sendEmptyMessageDelayed(SHOW_LOGIN, 1000);
         }
     }
+
 }

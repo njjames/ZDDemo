@@ -87,6 +87,7 @@
         style="@style/MyCheckboxButton"/>
 
     <Button
+        android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="@dimen/qb_px_40"
         android:text="@string/login_btn_text"
