@@ -84,7 +84,7 @@
         android:textSize="14sp"
         android:textColor="@android:color/white"
         android:layout_marginTop="@dimen/qb_px_10"
-        style="@style/MyCheckboxButton"/>
+        style="@style/LoginCheckboxButton"/>
 
     <Button
         android:id="@+id/btn_login"

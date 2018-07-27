@@ -19,8 +19,12 @@
         <item name="android:drawablePadding">@dimen/qb_px_2</item>
     </style>
 
-    <style name="MyCheckboxButton" parent="@android:style/Widget.CompoundButton.CheckBox">
+    <style name="LoginCheckboxButton" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/login_checkbox_selector</item>
+    </style>
+
+    <style name="SetIpCheckboxButton" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/setip_checkbox_selector</item>
     </style>
 
     <style name="LoginSettingText">
@@ -30,6 +34,22 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/login_setting_color</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="MyDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/dialog_bg</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+
+    <style name="setup_dialog_textview">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

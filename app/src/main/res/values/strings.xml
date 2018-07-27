@@ -17,4 +17,15 @@
     <string name="login_online_text">在线人员</string>
     <string name="login_imei_text">本机串号</string>
     <string name="login_help_text">帮助</string>
+
+    <string name="dialog_setip1_text">使用服务器名称、IP、托管域名</string>
+    <string name="dialog_setip2_text">使用“王者之路”IP地址解析账号</string>
+    <string name="dialog_setip1_server_name">服务器名：</string>
+    <string name="dialog_setip2_server_no">账号：</string>
+    <string name="dialog_setip2_server_pass">密码：</string>
+    <string name="dialog_setip2_server_port">端口：</string>
+    <string name="dialog_setip2_server_suffix">后缀：</string>
+    <string name="dialog_setip1_server_test">测试地址</string>
+    <string name="dialog_setip_save_text">保存</string>
+    <string name="dialog_setip_cancel_text">取消</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#1bd6e5</color>
+    <color name="colorPrimaryDark">#1bd6e5</color>
     <color name="colorAccent">#FF4081</color>
 
 
@@ -9,5 +9,7 @@
     <color name="login_btn_normal">#1cace4</color>
     <color name="login_btn_pressed">#008dff</color>
     <color name="login_setting_color">#7fffffff</color>
+
+    <color name="color_frame">#e6e6e6</color>
 
 </resources>

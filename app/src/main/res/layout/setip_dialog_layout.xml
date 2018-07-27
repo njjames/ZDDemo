@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <CheckBox
+        android:id="@+id/cb_setip1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_setip1_text"
+        android:textSize="16sp"
+        android:layout_marginLeft="@dimen/qb_px_15"
+        android:layout_marginRight="@dimen/qb_px_15"
+        android:layout_marginTop="@dimen/qb_px_15"
+        style="@style/SetIpCheckboxButton"
+        android:checked="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_20"
+        android:paddingRight="@dimen/qb_px_20">
+
+        <TextView
+            android:text="@string/dialog_setip1_server_name"
+            style="@style/setup_dialog_textview" />
+
+        <EditText
+            android:id="@+id/et_login_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_server_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_setip1_server_test"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="end"
+        android:layout_marginRight="@dimen/qb_px_20"
+        android:layout_marginEnd="@dimen/qb_px_20"/>
+
+    <CheckBox
+        android:id="@+id/cb_setip2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_setip2_text"
+        android:textSize="16sp"
+        android:layout_marginLeft="@dimen/qb_px_15"
+        android:layout_marginRight="@dimen/qb_px_15"
+        android:layout_marginTop="@dimen/qb_px_15"
+        style="@style/SetIpCheckboxButton"/>
+
+    <LinearLayout
+        android:id="@+id/ll_server_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_20"
+        android:paddingRight="@dimen/qb_px_20"
+        android:visibility="gone" >
+
+        <TextView
+            android:text="@string/dialog_setip2_server_no"
+            style="@style/setup_dialog_textview" />
+
+        <EditText
+            android:id="@+id/et_login_server_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_server_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_20"
+        android:paddingRight="@dimen/qb_px_20"
+        android:visibility="gone">
+
+        <TextView
+            android:text="@string/dialog_setip2_server_pass"
+            style="@style/setup_dialog_textview" />
+
+        <EditText
+            android:id="@+id/et_login_server_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_server_port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_20"
+        android:paddingRight="@dimen/qb_px_20"
+        android:visibility="gone">
+
+        <TextView
+            android:text="@string/dialog_setip2_server_port"
+            style="@style/setup_dialog_textview" />
+
+        <EditText
+            android:id="@+id/et_login_server_port"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_server_suffix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_20"
+        android:paddingRight="@dimen/qb_px_20"
+        android:visibility="gone">
+
+        <TextView
+            android:text="@string/dialog_setip2_server_suffix"
+            style="@style/setup_dialog_textview" />
+
+        <EditText
+            android:id="@+id/et_login_server_suffix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_frame"
+        android:layout_marginTop="@dimen/qb_px_5"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dialog_setip_cancel_text"
+            android:background="@null"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_frame"/>
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dialog_setip_save_text"
+            android:background="@null"/>
+    </LinearLayout>
+
+</LinearLayout>
