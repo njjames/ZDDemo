@@ -41,14 +41,14 @@ public class SplashActivity extends AppCompatActivity {
 
     private void showLogin() {
         startActivity(new Intent(this, LoginActivity.class));
-        SharedPreferences.Editor editor = getSharedPreferences("First", MODE_PRIVATE).edit();
-        editor.putBoolean("First", false);
-        editor.apply();
         finish();
     }
 
     private void showGuide() {
         startActivity(new Intent(this, GuideActivity.class));
+        SharedPreferences.Editor editor = getSharedPreferences("First", MODE_PRIVATE).edit();
+        editor.putBoolean("FirstEntrance", false);
+        editor.apply();
         finish();
     }
 

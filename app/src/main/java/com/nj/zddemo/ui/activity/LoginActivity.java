@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -139,6 +140,36 @@ public class LoginActivity extends BaseMVPActivity {
         mLlServerPass = view.findViewById(R.id.ll_server_pass);
         mLlServerPort = view.findViewById(R.id.ll_server_port);
         mLlServerSuffix = view.findViewById(R.id.ll_server_suffix);
+        mCbSetip1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mLoginServer.setEnabled(true);
+                    mCbSetip2.setChecked(false);
+                } else {
+                    mLoginServer.setEnabled(false);
+                    mCbSetip2.setChecked(true);
+                }
+            }
+        });
+        mCbSetip2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mLlServerNo.setVisibility(View.VISIBLE);
+                    mLlServerPass.setVisibility(View.VISIBLE);
+                    mLlServerPort.setVisibility(View.VISIBLE);
+                    mLlServerSuffix.setVisibility(View.VISIBLE);
+                    mCbSetip1.setChecked(false);
+                } else {
+                    mLlServerNo.setVisibility(View.GONE);
+                    mLlServerPass.setVisibility(View.GONE);
+                    mLlServerPort.setVisibility(View.GONE);
+                    mLlServerSuffix.setVisibility(View.GONE);
+                    mCbSetip1.setChecked(true);
+                }
+            }
+        });
 
     }
 

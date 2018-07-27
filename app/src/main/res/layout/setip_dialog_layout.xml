@@ -53,7 +53,7 @@
         android:textSize="16sp"
         android:layout_marginLeft="@dimen/qb_px_15"
         android:layout_marginRight="@dimen/qb_px_15"
-        android:layout_marginTop="@dimen/qb_px_15"
+        android:layout_marginTop="@dimen/qb_px_5"
         style="@style/SetIpCheckboxButton"/>
 
     <LinearLayout
@@ -140,7 +140,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/color_frame"
-        android:layout_marginTop="@dimen/qb_px_5"/>
+        android:layout_marginTop="@dimen/qb_px_10"/>
 
     <LinearLayout
         android:layout_width="match_parent"
