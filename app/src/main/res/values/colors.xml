@@ -10,6 +10,7 @@
     <color name="login_btn_pressed">#008dff</color>
     <color name="login_setting_color">#7fffffff</color>
 
+    <color name="color_text">#959595</color>
     <color name="color_frame">#e6e6e6</color>
 
 </resources>

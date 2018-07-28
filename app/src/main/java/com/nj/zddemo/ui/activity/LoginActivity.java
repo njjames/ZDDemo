@@ -1,6 +1,7 @@
 package com.nj.zddemo.ui.activity;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -16,13 +17,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.nj.zddemo.R;
+import com.nj.zddemo.bean.LoginServer;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 
 import java.util.List;
 
 public class LoginActivity extends BaseMVPActivity {
+    private static final String TAG = "LoginActivity";
+    public static final String TEST_SERVER_NAME = "zd17.bsd126.com:8";
 
     private EditText mLoginPass;
     private ImageView mShowPass;
@@ -44,6 +49,9 @@ public class LoginActivity extends BaseMVPActivity {
     private LinearLayout mLlServerPass;
     private LinearLayout mLlServerPort;
     private LinearLayout mLlServerSuffix;
+    private TextView mServerTest;
+    private Button mBtnSave;
+    private Button mBtnCancel;
 
     @Override
     protected int getLayoutId() {
@@ -125,7 +133,7 @@ public class LoginActivity extends BaseMVPActivity {
      */
     private void showSetIpDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.setip_dialog_layout, null);
-        Dialog dialog = new Dialog(this, R.style.MyDialog);
+        final Dialog dialog = new Dialog(this, R.style.MyDialog);
         dialog.setContentView(view);
         dialog.show();
 
@@ -140,15 +148,35 @@ public class LoginActivity extends BaseMVPActivity {
         mLlServerPass = view.findViewById(R.id.ll_server_pass);
         mLlServerPort = view.findViewById(R.id.ll_server_port);
         mLlServerSuffix = view.findViewById(R.id.ll_server_suffix);
+        mServerTest = view.findViewById(R.id.tv_server_test);
+        mBtnCancel = view.findViewById(R.id.btn_cancel);
+        mBtnSave = view.findViewById(R.id.btn_save);
+
+        LoginServer loginServer = EasySharedPreferences.load(LoginServer.class);
+        mLoginServer.setText(loginServer.getServer());
+        mLoginServerNo.setText(loginServer.getNumber());
+        mLoginServerPass.setText(loginServer.getPass());
+        mLoginServerPort.setText(loginServer.getPort());
+        mLoginServerSuffix.setText(loginServer.getSuffix());
+        if (loginServer.getKind() == 2) {
+            mCbSetip2.setChecked(true);
+        } else { //这样就默认显示第一种方式了
+            mCbSetip1.setChecked(true);
+        }
+        //需要调用一下显示，否则进入dialog不会调用checkedchange的回调
+        if (mCbSetip1.isChecked()) {
+            useSetIp1();
+        } else {
+            useSetIp2();
+        }
+
         mCbSetip1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //isChecked就是点击之后的状态
+                //点击之后是选中的状态，需要做的事
                 if (isChecked) {
-                    mLoginServer.setEnabled(true);
-                    mCbSetip2.setChecked(false);
-                } else {
-                    mLoginServer.setEnabled(false);
-                    mCbSetip2.setChecked(true);
+                    useSetIp1();
                 }
             }
         });
@@ -156,21 +184,71 @@ public class LoginActivity extends BaseMVPActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mLlServerNo.setVisibility(View.VISIBLE);
-                    mLlServerPass.setVisibility(View.VISIBLE);
-                    mLlServerPort.setVisibility(View.VISIBLE);
-                    mLlServerSuffix.setVisibility(View.VISIBLE);
-                    mCbSetip1.setChecked(false);
-                } else {
-                    mLlServerNo.setVisibility(View.GONE);
-                    mLlServerPass.setVisibility(View.GONE);
-                    mLlServerPort.setVisibility(View.GONE);
-                    mLlServerSuffix.setVisibility(View.GONE);
-                    mCbSetip1.setChecked(true);
+                    useSetIp2();
                 }
             }
         });
 
+        mBtnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                LoginServer loginServer = new LoginServer();
+                // 需要先从sp中load一个对象，而不能直接new，否则会报错
+                LoginServer loginServer = EasySharedPreferences.load(LoginServer.class);
+                loginServer.setServer(mLoginServer.getText().toString());
+                loginServer.setNumber(mLoginServerNo.getText().toString());
+                loginServer.setPass(mLoginServerPass.getText().toString());
+                loginServer.setPort(mLoginServerPort.getText().toString());
+                loginServer.setSuffix(mLoginServerSuffix.getText().toString());
+                if (mCbSetip1.isChecked()) {
+                    loginServer.setKind(1);
+                } else {
+                    loginServer.setKind(2);
+                }
+                loginServer.apply();
+                dialog.dismiss();
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        mServerTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLoginServer.setText(TEST_SERVER_NAME);
+            }
+        });
+    }
+
+    private void useSetIp2() {
+        mCbSetip2.setClickable(false);
+        mLlServerNo.setVisibility(View.VISIBLE);
+        mLlServerPass.setVisibility(View.VISIBLE);
+        mLlServerPort.setVisibility(View.VISIBLE);
+        mLlServerSuffix.setVisibility(View.VISIBLE);
+        mCbSetip1.setChecked(false);
+        mCbSetip1.setClickable(true);
+        mLoginServer.setEnabled(false);
+        mServerTest.setClickable(false);
+        mServerTest.setTextColor(Color.parseColor("#c2c2c2"));
+    }
+
+    private void useSetIp1() {
+        mCbSetip1.setClickable(false);   //将这个checkbox设置为不可点击，来达到选中之后点击状态不变的效果
+        mLoginServer.setEnabled(true);   //将输入服务的edittext设置为可用
+        mCbSetip2.setClickable(true);    //把第二个chexbox设置为可点击
+        mCbSetip2.setChecked(false);     //把第二个chexbox设置为未选中
+        mLlServerNo.setVisibility(View.GONE);   //将第二种输入方式隐藏
+        mLlServerPass.setVisibility(View.GONE);
+        mLlServerPort.setVisibility(View.GONE);
+        mLlServerSuffix.setVisibility(View.GONE);
+        mServerTest.setClickable(true);
+        mServerTest.setTextColor(Color.parseColor("#1bd6e5"));
     }
 
     /**

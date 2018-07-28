@@ -10,11 +10,11 @@
         android:layout_height="wrap_content"
         android:text="@string/dialog_setip1_text"
         android:textSize="16sp"
+        android:textColor="@color/color_text"
         android:layout_marginLeft="@dimen/qb_px_15"
         android:layout_marginRight="@dimen/qb_px_15"
         android:layout_marginTop="@dimen/qb_px_15"
-        style="@style/SetIpCheckboxButton"
-        android:checked="true"/>
+        style="@style/SetIpCheckboxButton"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,8 @@
             android:id="@+id/et_login_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <TextView
@@ -51,6 +52,7 @@
         android:layout_height="wrap_content"
         android:text="@string/dialog_setip2_text"
         android:textSize="16sp"
+        android:textColor="@color/color_text"
         android:layout_marginLeft="@dimen/qb_px_15"
         android:layout_marginRight="@dimen/qb_px_15"
         android:layout_marginTop="@dimen/qb_px_5"
@@ -73,7 +75,8 @@
             android:id="@+id/et_login_server_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -93,7 +96,8 @@
             android:id="@+id/et_login_server_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -113,7 +117,8 @@
             android:id="@+id/et_login_server_port"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -133,7 +138,8 @@
             android:id="@+id/et_login_server_suffix"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <View
