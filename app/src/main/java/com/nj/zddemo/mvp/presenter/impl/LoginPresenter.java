@@ -1,7 +1,14 @@
 package com.nj.zddemo.mvp.presenter.impl;
 
+import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.mvp.model.impl.LoginModel;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.view.impl.LoginView;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 登录功能的P层
@@ -10,9 +17,45 @@ import com.nj.zddemo.mvp.view.impl.LoginView;
 
 public class LoginPresenter extends MVPPresenter<LoginView> {
 
+    private LoginModel mLoginModel;
+
     public LoginPresenter(LoginView view) {
         super(view);
+        mLoginModel = new LoginModel();
     }
 
+    public void getMobileOnlineInfo() {
+        if (!isViewAttached()) {
+            return;
+        }
+        mLoginModel.getMobileOnlineInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<OnlineInfo>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscription(d);
+                    }
+
+                    @Override
+                    public void onNext(OnlineInfo onlineInfo) {
+                        if (isViewAttached()) {
+                            getView().loadMobileOnlineInfo(onlineInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getView().onRequestError("数据加载失败o(╥﹏╥)o");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 
 }

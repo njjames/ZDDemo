@@ -13,4 +13,8 @@
     <color name="color_text">#959595</color>
     <color name="color_frame">#e6e6e6</color>
 
+    <color name="color_dialog_bg_gray">#ededed</color>
+
+
+
 </resources>

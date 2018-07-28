@@ -28,4 +28,8 @@
     <string name="dialog_setip1_server_test">测试地址</string>
     <string name="dialog_setip_save_text">保存</string>
     <string name="dialog_setip_cancel_text">取消</string>
+
+    <string name="dialog_online_text">当前在线人数</string>
+    <string name="dialog_online_name_text">操作员</string>
+    <string name="dialog_online_date_text">最后登录时间</string>
 </resources>

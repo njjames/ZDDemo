@@ -7,7 +7,7 @@ import com.haoge.easyandroid.easy.PreferenceSupport;
  * Created by Administrator on 2018-07-28.
  */
 
-public class LoginServer extends PreferenceSupport {
+public class LoginServerInfo extends PreferenceSupport {
     private String server;
     private String number;
     private String pass;

@@ -31,11 +31,8 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
             setContentView(layoutId);
         }
         initPage(savedInstanceState);
-        List<MVPPresenter> presenters = createPresenters();
-        if (presenters != null) {
-            for (MVPPresenter presenter : presenters) {
-                mDispatcher.addPresenter(presenter);
-            }
+        for (MVPPresenter presenter : createPresenters()) {
+            mDispatcher.addPresenter(presenter);
         }
         mDispatcher.dispatchOnCreate(savedInstanceState);
     }

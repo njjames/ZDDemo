@@ -1,5 +1,6 @@
 package com.nj.zddemo.mvp.view.impl;
 
+import com.nj.zddemo.bean.OnlineInfo;
 import com.nj.zddemo.mvp.view.base.MVPView;
 
 /**
@@ -10,5 +11,8 @@ import com.nj.zddemo.mvp.view.base.MVPView;
  */
 
 public interface LoginView extends MVPView {
+     void onRequestError(String msg);
+
+     void loadMobileOnlineInfo(OnlineInfo onlineInfo);
 
 }

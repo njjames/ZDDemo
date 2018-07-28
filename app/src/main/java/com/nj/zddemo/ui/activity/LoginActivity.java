@@ -15,19 +15,27 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.haoge.easyandroid.easy.EasySharedPreferences;
+import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
-import com.nj.zddemo.bean.LoginServer;
+import com.nj.zddemo.bean.LoginServerInfo;
+import com.nj.zddemo.bean.OnlineInfo;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
+import com.nj.zddemo.mvp.presenter.impl.LoginPresenter;
+import com.nj.zddemo.mvp.view.impl.LoginView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
+import com.nj.zddemo.ui.adapter.login.OnlineInfoAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoginActivity extends BaseMVPActivity {
+public class LoginActivity extends BaseMVPActivity implements LoginView {
     private static final String TAG = "LoginActivity";
-    public static final String TEST_SERVER_NAME = "zd17.bsd126.com:8";
+    public static final String TEST_SERVER_NAME = "zd18.bsd126.com:8";
+    private List<MVPPresenter> mPresenters = new ArrayList<>();
 
     private EditText mLoginPass;
     private ImageView mShowPass;
@@ -52,6 +60,14 @@ public class LoginActivity extends BaseMVPActivity {
     private TextView mServerTest;
     private Button mBtnSave;
     private Button mBtnCancel;
+    private TextView mOnlineCount;
+    private TextView mOnlineTotal;
+    private TextView mOnlineTime;
+    private LoginPresenter mLoginPresenter;
+    private ListView mOnlineListView;
+
+    private List<OnlineInfo.RowsBean> mRowsBeanList = new ArrayList<>();
+    private OnlineInfoAdapter mOnlineInfoAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -102,7 +118,9 @@ public class LoginActivity extends BaseMVPActivity {
 
     @Override
     protected List<MVPPresenter> createPresenters() {
-        return null;
+        mLoginPresenter = new LoginPresenter(this);
+        mPresenters.add(mLoginPresenter);
+        return mPresenters;
     }
 
     @Override
@@ -120,12 +138,31 @@ public class LoginActivity extends BaseMVPActivity {
                 showSetIpDialog();
                 break;
             case R.id.tv_login_online:
+                showOnlineDialog();
                 break;
             case R.id.tv_login_imei:
                 break;
             case R.id.tv_login_help:
                 break;
         }
+    }
+
+    /**
+     * 显示在线人数对话框
+     */
+    private void showOnlineDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.online_dialog_layout, null);
+        Dialog dialog = new Dialog(this, R.style.MyDialog);
+        dialog.setContentView(view);
+
+        mOnlineCount = view.findViewById(R.id.tv_count);
+        mOnlineTotal = view.findViewById(R.id.tv_total);
+        mOnlineTime = view.findViewById(R.id.tv_time);
+        mOnlineListView = view.findViewById(R.id.lv_online);
+        mOnlineInfoAdapter = new OnlineInfoAdapter(mRowsBeanList);
+        mOnlineListView.setAdapter(mOnlineInfoAdapter);
+        mLoginPresenter.getMobileOnlineInfo();
+        dialog.show();
     }
 
     /**
@@ -151,14 +188,14 @@ public class LoginActivity extends BaseMVPActivity {
         mServerTest = view.findViewById(R.id.tv_server_test);
         mBtnCancel = view.findViewById(R.id.btn_cancel);
         mBtnSave = view.findViewById(R.id.btn_save);
-
-        LoginServer loginServer = EasySharedPreferences.load(LoginServer.class);
-        mLoginServer.setText(loginServer.getServer());
-        mLoginServerNo.setText(loginServer.getNumber());
-        mLoginServerPass.setText(loginServer.getPass());
-        mLoginServerPort.setText(loginServer.getPort());
-        mLoginServerSuffix.setText(loginServer.getSuffix());
-        if (loginServer.getKind() == 2) {
+        // 读取SP，设置初始的内容
+        LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+        mLoginServer.setText(serverInfo.getServer());
+        mLoginServerNo.setText(serverInfo.getNumber());
+        mLoginServerPass.setText(serverInfo.getPass());
+        mLoginServerPort.setText(serverInfo.getPort());
+        mLoginServerSuffix.setText(serverInfo.getSuffix());
+        if (serverInfo.getKind() == 2) {
             mCbSetip2.setChecked(true);
         } else { //这样就默认显示第一种方式了
             mCbSetip1.setChecked(true);
@@ -192,20 +229,20 @@ public class LoginActivity extends BaseMVPActivity {
         mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                LoginServer loginServer = new LoginServer();
+//                LoginServer serverInfo = new LoginServer();
                 // 需要先从sp中load一个对象，而不能直接new，否则会报错
-                LoginServer loginServer = EasySharedPreferences.load(LoginServer.class);
-                loginServer.setServer(mLoginServer.getText().toString());
-                loginServer.setNumber(mLoginServerNo.getText().toString());
-                loginServer.setPass(mLoginServerPass.getText().toString());
-                loginServer.setPort(mLoginServerPort.getText().toString());
-                loginServer.setSuffix(mLoginServerSuffix.getText().toString());
+                LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+                serverInfo.setServer(mLoginServer.getText().toString());
+                serverInfo.setNumber(mLoginServerNo.getText().toString());
+                serverInfo.setPass(mLoginServerPass.getText().toString());
+                serverInfo.setPort(mLoginServerPort.getText().toString());
+                serverInfo.setSuffix(mLoginServerSuffix.getText().toString());
                 if (mCbSetip1.isChecked()) {
-                    loginServer.setKind(1);
+                    serverInfo.setKind(1);
                 } else {
-                    loginServer.setKind(2);
+                    serverInfo.setKind(2);
                 }
-                loginServer.apply();
+                serverInfo.apply();
                 dialog.dismiss();
             }
         });
@@ -269,5 +306,23 @@ public class LoginActivity extends BaseMVPActivity {
             mLoginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
             mShowPass.setImageResource(R.drawable.eye_off);
         }
+    }
+
+    @Override
+    public void onRequestError(String msg) {
+        EasyToast.newBuilder().build().show(msg);
+    }
+
+    @Override
+    public void loadMobileOnlineInfo(OnlineInfo onlineInfo) {
+        mOnlineCount.setText(onlineInfo.count);
+        mOnlineTotal.setText("(可用点数:" + onlineInfo.totalCout + ")");
+        mOnlineTime.setText(onlineInfo.msg);
+        // 不能用等号赋值，这样这里的list和adpter中的就不是同一个数据源了
+//        mRowsBeanList = onlineInfo.rows;
+        // 应该获取的集合数据添加进来，记得先clear
+        mRowsBeanList.clear();
+        mRowsBeanList.addAll(onlineInfo.rows);
+        mOnlineInfoAdapter.notifyDataSetChanged();
     }
 }

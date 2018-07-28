@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.nj.zddemo.mvp.view.base.MVPView;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 /**
  * 基础P层
  * 用来进行P-V绑定和解绑
@@ -13,6 +16,8 @@ import com.nj.zddemo.mvp.view.base.MVPView;
  */
 
 public class MVPPresenter<T extends MVPView> {
+    private CompositeDisposable mCompositeDisposable;
+
     private T mView;
 
     public MVPPresenter(T view) {
@@ -64,4 +69,25 @@ public class MVPPresenter<T extends MVPView> {
     }
     public void onSaveInstanceState(Bundle bundle) {}
     public void onRestoreInstanceState(Bundle bundle) {}
+
+    /**
+     * 每当我们得到一个Disposable时就将它添加到容器中
+     * @param disposable
+     */
+    public void addSubscription(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+    }
+
+    /**
+     * 取消订阅
+     * 当Activity退出时，停止所有的订阅
+     */
+    public void unSubscription() {
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.clear();
+        }
+    }
 }
