@@ -1,8 +1,12 @@
 package com.nj.zddemo.ui.activity;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -18,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.haoge.easyandroid.easy.EasySharedPreferences;
+import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
 import com.nj.zddemo.bean.LoginServer;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
@@ -52,6 +57,7 @@ public class LoginActivity extends BaseMVPActivity {
     private TextView mServerTest;
     private Button mBtnSave;
     private Button mBtnCancel;
+    private String mImei;
 
     @Override
     protected int getLayoutId() {
@@ -122,9 +128,28 @@ public class LoginActivity extends BaseMVPActivity {
             case R.id.tv_login_online:
                 break;
             case R.id.tv_login_imei:
+                getImei();
+                EasyToast.newBuilder().build().show(mImei);
                 break;
             case R.id.tv_login_help:
                 break;
+        }
+    }
+
+    private void getImei() {
+        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            mImei = "TEL" + telephonyManager.getDeviceId();
         }
     }
 
