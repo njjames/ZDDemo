@@ -1,6 +1,7 @@
 package com.nj.zddemo.ui.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
+import com.nj.zddemo.api.APIConstants;
+import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.LoginServerInfo;
 import com.nj.zddemo.bean.OnlineInfo;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
@@ -28,6 +31,8 @@ import com.nj.zddemo.mvp.presenter.impl.LoginPresenter;
 import com.nj.zddemo.mvp.view.impl.LoginView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 import com.nj.zddemo.ui.adapter.login.OnlineInfoAdapter;
+import com.nj.zddemo.utils.NetUtils;
+import com.nj.zddemo.utils.PhoneUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,12 +137,13 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             case R.id.iv_showpass: //点击是否显示密码
                 changePassStatus();
                 break;
-            case R.id.btn_login:
+            case R.id.btn_login: //点击登录
+                login();
                 break;
-            case R.id.tv_login_setip:
+            case R.id.tv_login_setip: //点击设置IP
                 showSetIpDialog();
                 break;
-            case R.id.tv_login_online:
+            case R.id.tv_login_online: //点击在线人数
                 showOnlineDialog();
                 break;
             case R.id.tv_login_imei:
@@ -148,12 +154,39 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
     }
 
     /**
+     * 登录
+     */
+    private void login() {
+        if (NetUtils.getNetType(this) == NetUtils.NETWORK_NONE) {
+            EasyToast.newBuilder().build().show("没有网络连接，请连接网络");
+            return;
+        }
+        // TODO 这里应该有ip的判断，写的可能不全面
+        LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+        if (TextUtils.isEmpty(serverInfo.getServer())) {
+            EasyToast.newBuilder().build().show("请设置好IP地址之后再登录");
+            return;
+        }
+        String name = mLoginName.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            EasyToast.newBuilder().build().show("操作员不能为空");
+            return;
+        }
+        String pass = mLoginPass.getText().toString();
+        String imei = PhoneUtils.getImei(this);
+        showLoadingDialog();
+//        mLoginPresenter.getLogin(APIConstants.METHOD_GETLOGIN, name, pass, imei);
+    }
+
+    /**
      * 显示在线人数对话框
      */
     private void showOnlineDialog() {
+        showLoadingDialog();
         View view = LayoutInflater.from(this).inflate(R.layout.online_dialog_layout, null);
         Dialog dialog = new Dialog(this, R.style.MyDialog);
         dialog.setContentView(view);
+        dialog.show();
 
         mOnlineCount = view.findViewById(R.id.tv_count);
         mOnlineTotal = view.findViewById(R.id.tv_total);
@@ -162,7 +195,6 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
         mOnlineInfoAdapter = new OnlineInfoAdapter(mRowsBeanList);
         mOnlineListView.setAdapter(mOnlineInfoAdapter);
         mLoginPresenter.getMobileOnlineInfo();
-        dialog.show();
     }
 
     /**
@@ -324,5 +356,26 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
         mRowsBeanList.clear();
         mRowsBeanList.addAll(onlineInfo.rows);
         mOnlineInfoAdapter.notifyDataSetChanged();
+        hideLoadingDialog();
+    }
+
+    @Override
+    public void loadLoginResult(LoginResult loginResult) {
+        if ("ok".equals(loginResult.code)) {
+            LoginResult result = EasySharedPreferences.load(LoginResult.class);
+            result.Id = loginResult.Id;
+            result.caozuoyuan_xm = loginResult.caozuoyuan_xm;
+            result.caozuoyuan_Gndm = loginResult.caozuoyuan_Gndm;
+            result.GongSiNo = loginResult.GongSiNo;
+            result.GongSiMc = loginResult.GongSiMc;
+            result.GongSi_Gndm = loginResult.GongSi_Gndm;
+            result.CangKu_Gndm = loginResult.CangKu_Gndm;
+            result.CangKuDo_Gndm = loginResult.CangKuDo_Gndm;
+            result.apply();
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            EasyToast.newBuilder().build().show(loginResult.msg);
+        }
+        hideLoadingDialog();
     }
 }

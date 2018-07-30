@@ -1,5 +1,6 @@
 package com.nj.zddemo.mvp.view.impl;
 
+import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.OnlineInfo;
 import com.nj.zddemo.mvp.view.base.MVPView;
 
@@ -11,8 +12,11 @@ import com.nj.zddemo.mvp.view.base.MVPView;
  */
 
 public interface LoginView extends MVPView {
+     //这个接口用于网络请求失败，而不是逻辑失败，比如用户名不正确
      void onRequestError(String msg);
 
      void loadMobileOnlineInfo(OnlineInfo onlineInfo);
+
+     void loadLoginResult(LoginResult loginResult);
 
 }

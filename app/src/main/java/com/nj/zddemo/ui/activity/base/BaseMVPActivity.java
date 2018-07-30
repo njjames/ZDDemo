@@ -1,12 +1,15 @@
 package com.nj.zddemo.ui.activity.base;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.nj.zddemo.R;
 import com.nj.zddemo.mvp.MVPDispatcher;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.view.base.MVPView;
@@ -21,6 +24,7 @@ import java.util.List;
 public abstract class BaseMVPActivity extends AppCompatActivity implements MVPView,View.OnClickListener {
     //一个Activity持有一个唯一的Dispatcher派发器
     private MVPDispatcher mDispatcher = new MVPDispatcher();
+    private Dialog mLoadingDialog;
 
     //生命周期相关方法
     @Override
@@ -112,6 +116,23 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
     @Override
     public Activity getHostActivity() {
         return this;
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(this, R.style.LoadingDialog);
+            mLoadingDialog.setContentView(R.layout.loading_dialog_layout);
+            mLoadingDialog.setCanceledOnTouchOutside(false);
+        }
+        mLoadingDialog.show();
+    }
+
+    @Override
+    public void hideLoadingDialog() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.dismiss();
+        }
     }
 
     /**

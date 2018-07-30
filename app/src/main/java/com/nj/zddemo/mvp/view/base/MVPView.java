@@ -15,4 +15,8 @@ public interface MVPView {
      * @return
      */
     Activity getHostActivity();
+
+    void showLoadingDialog();
+
+    void hideLoadingDialog();
 }
