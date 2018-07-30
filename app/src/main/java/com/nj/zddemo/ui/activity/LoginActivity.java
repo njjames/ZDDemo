@@ -175,7 +175,7 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
         String pass = mLoginPass.getText().toString();
         String imei = PhoneUtils.getImei(this);
         showLoadingDialog();
-//        mLoginPresenter.getLogin(APIConstants.METHOD_GETLOGIN, name, pass, imei);
+        mLoginPresenter.getLogin(APIConstants.METHOD_GETLOGIN, name, pass, imei);
     }
 
     /**

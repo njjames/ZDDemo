@@ -122,9 +122,11 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
     public void showLoadingDialog() {
         if (mLoadingDialog == null) {
             mLoadingDialog = new Dialog(this, R.style.LoadingDialog);
-            mLoadingDialog.setContentView(R.layout.loading_dialog_layout);
             mLoadingDialog.setCanceledOnTouchOutside(false);
+            //TODO 是否不让返回，有待确定
+//            mLoadingDialog.setCancelable(false);
         }
+        mLoadingDialog.setContentView(R.layout.loading_dialog_layout);
         mLoadingDialog.show();
     }
 
