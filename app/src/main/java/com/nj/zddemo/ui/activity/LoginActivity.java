@@ -25,6 +25,7 @@ import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
 import com.nj.zddemo.api.APIConstants;
+import com.nj.zddemo.api.ApiManager;
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.LoginServerInfo;
 import com.nj.zddemo.bean.OnlineInfo;
@@ -300,9 +301,14 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
                 // 需要先从sp中load一个对象，而不能直接new，否则会报错
                 if (mCbSetip1.isChecked()) {
                     LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
-                    serverInfo.setServer(mLoginServer.getText().toString());
-                    serverInfo.setKind(1);
-                    serverInfo.apply();
+                    // 如果切换了登录方式或者登录的服务地址改变，则保存
+                    if (serverInfo.getKind() != 1 || !serverInfo.getServer().equals(mLoginServer.getText().toString())) {
+                        serverInfo.setKind(1);
+                        serverInfo.setServer(mLoginServer.getText().toString());
+                        serverInfo.apply();
+                        // 重置API，用来获取新的网络请求接口
+                        ApiManager.getInstance().resetAAPI();
+                    }
                     mSetIpDialog.dismiss();
                 } else {
                     showLoadingDialog();
@@ -431,13 +437,16 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             ip = data + mLoginServerPort.getText().toString() + mLoginServerSuffix.getText().toString();
         }
         LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
-        serverInfo.setNumber(mLoginServerNo.getText().toString());
-        serverInfo.setPass(mLoginServerPass.getText().toString());
-        serverInfo.setPort(mLoginServerPort.getText().toString());
-        serverInfo.setSuffix(mLoginServerSuffix.getText().toString());
-        serverInfo.setIp(ip);
-        serverInfo.setKind(2);
-        serverInfo.apply();
+        if (serverInfo.getKind() == 1 || !serverInfo.getIp().equals(ip)) {
+            serverInfo.setKind(2);
+            serverInfo.setNumber(mLoginServerNo.getText().toString());
+            serverInfo.setPass(mLoginServerPass.getText().toString());
+            serverInfo.setPort(mLoginServerPort.getText().toString());
+            serverInfo.setSuffix(mLoginServerSuffix.getText().toString());
+            serverInfo.setIp(ip);
+            serverInfo.apply();
+            ApiManager.getInstance().resetAAPI();
+        }
         hideLoadingDialog();
         mSetIpDialog.dismiss();
     }

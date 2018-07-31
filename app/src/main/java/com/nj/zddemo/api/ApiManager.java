@@ -65,12 +65,26 @@ public class ApiManager {
      */
     private <T> T configRetrofit(Class<T> service) {
         LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+        // 判断登录方式
+        String ip;
+        if (serverInfo.getKind() == 1) {
+            ip = serverInfo.getServer();
+        }else {
+            ip = serverInfo.getIp();
+        }
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + serverInfo.getServer())
+                .baseUrl("http://" + ip)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit.create(service);
+    }
+
+    /**
+     * 用于重新获取网络请求接口的实例
+     */
+    public void resetAAPI() {
+        commonApi = null;
     }
 }

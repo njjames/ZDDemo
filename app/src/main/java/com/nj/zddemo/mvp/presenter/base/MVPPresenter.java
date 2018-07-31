@@ -66,6 +66,7 @@ public class MVPPresenter<T extends MVPView> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {}
     public void onDestroy() {
         detach();
+        unSubscription();
     }
     public void onSaveInstanceState(Bundle bundle) {}
     public void onRestoreInstanceState(Bundle bundle) {}
@@ -83,7 +84,7 @@ public class MVPPresenter<T extends MVPView> {
 
     /**
      * 取消订阅
-     * 当Activity退出时，停止所有的订阅
+     * 当Activity退出时，停止所有的订阅，来停止UI更新
      */
     public void unSubscription() {
         if (mCompositeDisposable != null) {
