@@ -2,8 +2,9 @@ package com.nj.zddemo.ui.activity.base;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.nj.zddemo.mvp.MVPDispatcher;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.view.base.MVPView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,17 +27,25 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
     //一个Activity持有一个唯一的Dispatcher派发器
     private MVPDispatcher mDispatcher = new MVPDispatcher();
     private Dialog mLoadingDialog;
+    private List<MVPPresenter> mPresenters = new ArrayList<>();
 
     //生命周期相关方法
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         int layoutId = getLayoutId();
         if (layoutId != 0) {
             setContentView(layoutId);
         }
         initPage(savedInstanceState);
-        for (MVPPresenter presenter : createPresenters()) {
+        createPresenters(mPresenters);
+        for (MVPPresenter presenter : mPresenters) {
             mDispatcher.addPresenter(presenter);
         }
         mDispatcher.dispatchOnCreate(savedInstanceState);
@@ -110,8 +120,9 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
     /**
      * 创建与子页面相关的presenter实例，可以绑定多个
      * @return
+     * @param presenters
      */
-    protected abstract List<MVPPresenter> createPresenters();
+    protected abstract void createPresenters(List<MVPPresenter> presenters);
 
     @Override
     public Activity getHostActivity() {

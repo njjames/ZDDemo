@@ -4,14 +4,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.nj.zddemo.R;
+import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
+import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseMVPActivity {
     private static final int SHOW_LOGIN = 100;
     private static final int SHOW_GUIDE = 101;
 
@@ -53,9 +55,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_activity);
+    protected int getLayoutId() {
+        return R.layout.splash_activity;
+    }
+
+    @Override
+    protected void initPage(Bundle savedInstanceState) {
         SharedPreferences sp = getSharedPreferences("First", MODE_PRIVATE);
         boolean firstEntrance = sp.getBoolean("FirstEntrance", true);
         MyHandler myHandler = new MyHandler(this);
@@ -64,6 +69,10 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             myHandler.sendEmptyMessageDelayed(SHOW_LOGIN, 1000);
         }
+    }
+
+    @Override
+    protected void createPresenters(List<MVPPresenter> presenters) {
     }
 
 }

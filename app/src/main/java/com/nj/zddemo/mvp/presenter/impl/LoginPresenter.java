@@ -93,4 +93,38 @@ public class LoginPresenter extends MVPPresenter<LoginView> {
                 });
     }
 
+    public void getWZZLIP(String username, String pass) {
+        if (!isViewAttached()) {
+            return;
+        }
+        mLoginModel.getWZZLIP(username, pass)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscription(d);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if (isViewAttached()) {
+                            getView().loadWZZLIP(s);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getView().onRequestError("数据请求失败o(╥﹏╥)o");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 }

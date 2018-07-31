@@ -13,10 +13,20 @@ public class LoginServerInfo extends PreferenceSupport {
     private String pass;
     private String port;
     private String suffix;
+    private String ip;
     private int kind;
+
     // 默认就有，如果有其他构造方法，就必须添加
-//    public LoginServer() {
-//    }
+    //    public LoginServer() {
+    //    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getServer() {
         return server;

@@ -34,4 +34,21 @@
     <string name="dialog_online_date_text">最后登录时间</string>
 
     <string name="dialog_loading_text">加载中...</string>
+
+    <string name="dialog_help_title">登陆帮助</string>
+    <string name="dialog_help_text">
+                        一、手机App端配置\n
+                        \t\t\t1.点击“设置IP”，若有固定IP或托管域名，直接在服务器处输入服务器地址，若端口不是80，则再加上:端口号，如：202.13.55.67:8。\n
+                        \t\t\t2.自建服务器且没有固定IP，点击“使用王者之路”，输入王者之旅的账号、密码、端口、后缀（一般为/zdApp）。\n
+                        \t\t\t3.点击保存后登录。\n
+                        二、登录App时异常报错处理\n
+                        \t\t\t1.报“连接服务器失败，请检查配置”，原因如下：\n
+                        \t\t\t\t\t1）若为王者之路模式，检查端口、后缀是否正确。\n
+                        \t\t\t\t\t2）PC端是否正确配置了路由器，映射好了端口。\n
+                        \t\t\t\t\t3）PC端是否被防火墙拦截。\n
+                        \t\t\t\t\t4）服务器zdApp目录下的Web.config中的数据库配置是否正确。\n
+                        \t\t\t2.报“注册站点为0”，原因可能如下：\n
+                        \t\t\t\t\t1.请先在PC端，中道客户端的主模块登录一下。\n
+                        \t\t\t\t\t2.服务器时间日期格式不对。\n
+                        \t\t\t\t\t3.确实没有注册移动办公点数。</string>
 </resources>

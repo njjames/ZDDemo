@@ -14,7 +14,7 @@
         <item name="android:background">@drawable/login_edittext_bg</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:textColorHint">@color/login_hint_text</item>
         <item name="android:padding">@dimen/qb_px_10</item>
         <item name="android:drawablePadding">@dimen/qb_px_2</item>
     </style>

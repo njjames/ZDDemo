@@ -1,10 +1,8 @@
 package com.nj.zddemo.ui.activity;
 
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.nj.zddemo.R;
+import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
+import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 import com.nj.zddemo.ui.adapter.SplashPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends BaseMVPActivity {
 
     private ViewPager mViewPager;
     private LinearLayout mIndicator;
@@ -29,10 +29,14 @@ public class GuideActivity extends AppCompatActivity {
     private AnimatorSet mAnimatorSet;
     private ScaleAnimation mAnimation;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.guide_activity);
+    protected int getLayoutId() {
+        return R.layout.guide_activity;
+    }
+
+    @Override
+    protected void initPage(Bundle savedInstanceState) {
         mViewPager = findViewById(R.id.vp_guide);
         mIndicator = findViewById(R.id.ll_indicator);
         mImmeditate = findViewById(R.id.iv_immeditate);
@@ -47,6 +51,10 @@ public class GuideActivity extends AppCompatActivity {
         initImmeditateAnimator();
         initIndicator();
         initViewPager();
+    }
+
+    @Override
+    protected void createPresenters(List<MVPPresenter> presenters) {
     }
 
     /**

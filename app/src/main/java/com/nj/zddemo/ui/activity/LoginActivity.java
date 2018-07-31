@@ -1,5 +1,6 @@
 package com.nj.zddemo.ui.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.haoge.easyandroid.easy.EasyPermissions;
 import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
@@ -26,6 +28,7 @@ import com.nj.zddemo.api.APIConstants;
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.LoginServerInfo;
 import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.bean.RememberOperator;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.presenter.impl.LoginPresenter;
 import com.nj.zddemo.mvp.view.impl.LoginView;
@@ -40,7 +43,6 @@ import java.util.List;
 public class LoginActivity extends BaseMVPActivity implements LoginView {
     private static final String TAG = "LoginActivity";
     public static final String TEST_SERVER_NAME = "zd18.bsd126.com:8";
-    private List<MVPPresenter> mPresenters = new ArrayList<>();
 
     private EditText mLoginPass;
     private ImageView mShowPass;
@@ -73,6 +75,8 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
 
     private List<OnlineInfo.RowsBean> mRowsBeanList = new ArrayList<>();
     private OnlineInfoAdapter mOnlineInfoAdapter;
+    private CheckBox mRemember;
+    private Dialog mSetIpDialog;
 
     @Override
     protected int getLayoutId() {
@@ -90,7 +94,13 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
         mOnLine = findViewById(R.id.tv_login_online);
         mIemi = findViewById(R.id.tv_login_imei);
         mHelp = findViewById(R.id.tv_login_help);
+        mRemember = findViewById(R.id.cb_remember);
 
+        RememberOperator rememberOperator = EasySharedPreferences.load(RememberOperator.class);
+        if (rememberOperator.isChecked) {
+            mRemember.setChecked(true);
+            mLoginName.setText(rememberOperator.name);
+        }
         mClearName.setOnClickListener(this);
         mShowPass.setOnClickListener(this);
         mBtnLogin.setOnClickListener(this);
@@ -119,13 +129,14 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
 
             }
         });
+        // 运行时权限的申请
+        EasyPermissions.create(Manifest.permission.READ_PHONE_STATE).request(this);
     }
 
     @Override
-    protected List<MVPPresenter> createPresenters() {
+    protected void createPresenters(List<MVPPresenter> presenters) {
         mLoginPresenter = new LoginPresenter(this);
-        mPresenters.add(mLoginPresenter);
-        return mPresenters;
+        presenters.add(mLoginPresenter);
     }
 
     @Override
@@ -147,10 +158,28 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
                 showOnlineDialog();
                 break;
             case R.id.tv_login_imei:
+                showImei();
                 break;
             case R.id.tv_login_help:
+                showHelpDialog();
                 break;
         }
+    }
+
+    /**
+     * 帮助
+     */
+    private void showHelpDialog() {
+        Dialog dialog = new Dialog(this, R.style.MyDialog);
+        dialog.setContentView(R.layout.help_dialog_layout);
+        dialog.show();
+    }
+
+    /**
+     * 显示本机串号
+     */
+    private void showImei() {
+        EasyToast.newBuilder().build().show(PhoneUtils.getImei(this));
     }
 
     /**
@@ -161,9 +190,10 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             EasyToast.newBuilder().build().show("没有网络连接，请连接网络");
             return;
         }
-        // TODO 这里应该有ip的判断，写的可能不全面
+        // 如果是第一种方式并且服务名为空，或者第二种方式并且ip地址为空，就提示
         LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
-        if (TextUtils.isEmpty(serverInfo.getServer())) {
+        if ((serverInfo.getKind() == 1 && TextUtils.isEmpty(serverInfo.getServer()))
+                || (serverInfo.getKind() == 2 && TextUtils.isEmpty(serverInfo.getIp()))) {
             EasyToast.newBuilder().build().show("请设置好IP地址之后再登录");
             return;
         }
@@ -172,6 +202,11 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             EasyToast.newBuilder().build().show("操作员不能为空");
             return;
         }
+        // 处理是否记住操作员的逻辑
+        RememberOperator rememberOperator = EasySharedPreferences.load(RememberOperator.class);
+        rememberOperator.isChecked = mRemember.isChecked();
+        rememberOperator.name = mLoginName.getText().toString();
+        rememberOperator.apply();
         String pass = mLoginPass.getText().toString();
         String imei = PhoneUtils.getImei(this);
         showLoadingDialog();
@@ -202,9 +237,9 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
      */
     private void showSetIpDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.setip_dialog_layout, null);
-        final Dialog dialog = new Dialog(this, R.style.MyDialog);
-        dialog.setContentView(view);
-        dialog.show();
+        mSetIpDialog = new Dialog(this, R.style.MyDialog);
+        mSetIpDialog.setContentView(view);
+        mSetIpDialog.show();
 
         mCbSetip1 = view.findViewById(R.id.cb_setip1);
         mCbSetip2 = view.findViewById(R.id.cb_setip2);
@@ -263,26 +298,24 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             public void onClick(View v) {
 //                LoginServer serverInfo = new LoginServer();
                 // 需要先从sp中load一个对象，而不能直接new，否则会报错
-                LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
-                serverInfo.setServer(mLoginServer.getText().toString());
-                serverInfo.setNumber(mLoginServerNo.getText().toString());
-                serverInfo.setPass(mLoginServerPass.getText().toString());
-                serverInfo.setPort(mLoginServerPort.getText().toString());
-                serverInfo.setSuffix(mLoginServerSuffix.getText().toString());
                 if (mCbSetip1.isChecked()) {
+                    LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+                    serverInfo.setServer(mLoginServer.getText().toString());
                     serverInfo.setKind(1);
+                    serverInfo.apply();
+                    mSetIpDialog.dismiss();
                 } else {
-                    serverInfo.setKind(2);
+                    showLoadingDialog();
+                    // 异步请求网络，保存工作，放在请求成功的回调中
+                    getWZZLIP(mLoginServerNo.getText().toString(), mLoginServerPass.getText().toString());
                 }
-                serverInfo.apply();
-                dialog.dismiss();
             }
         });
 
         mBtnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                mSetIpDialog.dismiss();
             }
         });
 
@@ -292,6 +325,10 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
                 mLoginServer.setText(TEST_SERVER_NAME);
             }
         });
+    }
+
+    private void getWZZLIP(String number, String pass) {
+        mLoginPresenter.getWZZLIP(number, pass);
     }
 
     private void useSetIp2() {
@@ -343,6 +380,7 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
     @Override
     public void onRequestError(String msg) {
         EasyToast.newBuilder().build().show(msg);
+        hideLoadingDialog();
     }
 
     @Override
@@ -377,5 +415,30 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
             EasyToast.newBuilder().build().show(loginResult.msg);
         }
         hideLoadingDialog();
+    }
+
+    @Override
+    public void loadWZZLIP(String data) {
+        if (TextUtils.isEmpty(data)) {
+            EasyToast.newBuilder().build().show("王者之路账号或密码错误。");
+            return;
+        }
+        String ip;
+        // 如果不存在端口，就直接作为ip，否则需要连接上端口和后缀
+        if (TextUtils.isEmpty(mLoginServerPort.getText().toString())) {
+            ip = data;
+        } else {
+            ip = data + mLoginServerPort.getText().toString() + mLoginServerSuffix.getText().toString();
+        }
+        LoginServerInfo serverInfo = EasySharedPreferences.load(LoginServerInfo.class);
+        serverInfo.setNumber(mLoginServerNo.getText().toString());
+        serverInfo.setPass(mLoginServerPass.getText().toString());
+        serverInfo.setPort(mLoginServerPort.getText().toString());
+        serverInfo.setSuffix(mLoginServerSuffix.getText().toString());
+        serverInfo.setIp(ip);
+        serverInfo.setKind(2);
+        serverInfo.apply();
+        hideLoadingDialog();
+        mSetIpDialog.dismiss();
     }
 }
