@@ -51,4 +51,7 @@
                         \t\t\t\t\t1.请先在PC端，中道客户端的主模块登录一下。\n
                         \t\t\t\t\t2.服务器时间日期格式不对。\n
                         \t\t\t\t\t3.确实没有注册移动办公点数。</string>
+
+    <string name="toady_count">今日开单</string>
+    <string name="toady_money">今日总额</string>
 </resources>

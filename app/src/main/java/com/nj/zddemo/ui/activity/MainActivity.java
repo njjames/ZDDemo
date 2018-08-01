@@ -11,16 +11,28 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.nj.zddemo.R;
+import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
+import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends BaseMVPActivity {
 
     private BoomMenuButton mBoomMenuButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+    protected int getLayoutId() {
+        return R.layout.main_activity;
+    }
+
+    @Override
+    protected void initPage(Bundle savedInstanceState) {
         initBmbView();
+    }
+
+    @Override
+    protected void createPresenters(List<MVPPresenter> presenters) {
+
     }
 
     private void initBmbView() {
@@ -35,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mBoomMenuButton.clearBuilders();
         for (int i = 0; i < mBoomMenuButton.getPiecePlaceEnum().pieceNumber(); i++) {
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
-//                    .rotateText(true)   //设置文字循环滚动
+//                    .rotateText(true)   //设置文字循环滚动，好像不是这个
                     .listener(new OnBMClickListener() { //添加点击事件
                         @Override
                         public void onBoomButtonClick(int index) {
