@@ -96,6 +96,7 @@ public class LoginActivity extends BaseMVPActivity implements LoginView {
         mIemi = findViewById(R.id.tv_login_imei);
         mHelp = findViewById(R.id.tv_login_help);
         mRemember = findViewById(R.id.cb_remember);
+        mLoginName.setText("管理员");
 
         RememberOperator rememberOperator = EasySharedPreferences.load(RememberOperator.class);
         if (rememberOperator.isChecked) {

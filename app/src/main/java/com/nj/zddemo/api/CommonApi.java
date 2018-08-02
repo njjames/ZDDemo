@@ -2,6 +2,7 @@ package com.nj.zddemo.api;
 
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.bean.TodayBill;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -42,5 +43,13 @@ public interface CommonApi {
      */
     @GET("http://bsdip.bsd102.com/ReturnIpM.aspx")
     Observable<String> getWZZLIP(@Query("UserName") String username, @Query("UserPwd") String pass);
+
+    /**
+     * 获取今日开单的信息
+     * @param czyid 操作员id
+     * @return
+     */
+    @GET("/android/Handler1.ashx?method=getTodayXiaosh")
+    Observable<TodayBill> getTodayXiaosh(@Query("czyid") String czyid);
 
 }

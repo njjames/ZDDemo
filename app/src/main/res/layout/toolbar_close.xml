@@ -6,21 +6,26 @@
     android:paddingLeft="@dimen/qb_px_10"
     android:gravity="center_vertical">
 
-    <Button
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_search_white"
+        android:padding="@dimen/qb_px_4"/>
+
+    <TextView
+        android:id="@+id/tv_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="查找配件"
-        android:drawableLeft="@drawable/ic_search"
-        android:drawablePadding="@dimen/qb_px_5"
         android:layout_weight="1"
-        android:gravity="start|center_vertical"
-        android:background="@drawable/btn_page_title_bg"
-        android:textColor="@color/color_text"/>
+        android:text="开单数量1，开单金额1000"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
 
     <ImageView
         android:layout_width="@dimen/qb_px_38"
         android:layout_height="@dimen/qb_px_38"
         android:src="@drawable/icon_scan_page"
         android:padding="@dimen/qb_px_10"/>
-
 </LinearLayout>
+

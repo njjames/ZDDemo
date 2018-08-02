@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.nj.zddemo.R;
 import com.nj.zddemo.mvp.MVPDispatcher;
@@ -33,14 +34,15 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
     //生命周期相关方法
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            View decorView = getWindow().getDecorView();
-//            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }
         int layoutId = getLayoutId();
         if (layoutId != 0) {
             setContentView(layoutId);
@@ -51,6 +53,15 @@ public abstract class BaseMVPActivity extends AppCompatActivity implements MVPVi
             mDispatcher.addPresenter(presenter);
         }
         mDispatcher.dispatchOnCreate(savedInstanceState);
+        initData();
+    }
+
+    /**
+     * 用来初始化数据，主要是在onCreate的时候就要从网络获取数据
+     * 不写成抽象的，子类不必必须重写
+     */
+    protected void initData() {
+
     }
 
     @Override
