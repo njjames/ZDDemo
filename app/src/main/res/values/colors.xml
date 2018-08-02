@@ -20,4 +20,8 @@
 
     <color name="transparence">@android:color/transparent</color>
 
+    <color name="scalesinfo_text_name">#656565</color>
+
+    <color name="orange">#d56b08</color>
+
 </resources>

@@ -2,6 +2,8 @@ package com.nj.zddemo.ui.activity;
 
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -17,13 +19,15 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.nj.zddemo.R;
 import com.nj.zddemo.bean.LoginResult;
-import com.nj.zddemo.bean.LoginServerInfo;
+import com.nj.zddemo.bean.SalesInfoByBill;
 import com.nj.zddemo.bean.TodayBill;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.presenter.impl.TodayPresenter;
 import com.nj.zddemo.mvp.view.impl.TodayView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
+import com.nj.zddemo.ui.adapter.main.SalesInfoAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseMVPActivity implements TodayView {
@@ -38,6 +42,9 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
     private TextView mContentMoney;
     private TextView mToobarTitle;
     private TodayPresenter mTodayPresenter;
+    private List<SalesInfoByBill.RowsBean> mRowsBeans = new ArrayList<>();
+    private RecyclerView mRecycleview;
+    private SalesInfoAdapter mSalesInfoAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -48,6 +55,15 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
     protected void initPage(Bundle savedInstanceState) {
         initTitle();
         initBmbView();
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mRecycleview = findViewById(R.id.rv_today);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRecycleview.setLayoutManager(linearLayoutManager);
+        mSalesInfoAdapter = new SalesInfoAdapter(mRowsBeans);
+        mRecycleview.setAdapter(mSalesInfoAdapter);
     }
 
     @Override
@@ -61,6 +77,19 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
         loginResult.Id = "16";
         mTodayPresenter.getTodayBill(loginResult.Id);
+        SalesInfoByBill salesInfoByBill = new SalesInfoByBill();
+        List<SalesInfoByBill.RowsBean> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            SalesInfoByBill.RowsBean rowsBean = new SalesInfoByBill.RowsBean();
+            rowsBean.kehu_mc = "客户" + i;
+            rowsBean.list_no = "XS012018000" + i;
+            rowsBean.list_rq = "2018-08-02 " + i;
+            rowsBean.xiao_list_ze = "1234" + i;
+            list.add(rowsBean);
+        }
+        salesInfoByBill.rows = list;
+        loadSalesInfo(salesInfoByBill);
+
     }
 
     private void initTitle() {
@@ -154,5 +183,12 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         mContentCount.setText(todayBill.code + "单");
         mContentMoney.setText(todayBill.msg + "元");
         mToobarTitle.setText("开单数量" + todayBill.code + "单,开单金额" + todayBill.msg + "元");
+    }
+
+    @Override
+    public void loadSalesInfo(SalesInfoByBill salesInfoByBill) {
+        mRowsBeans.clear();
+        mRowsBeans.addAll(salesInfoByBill.rows);
+        mSalesInfoAdapter.notifyDataSetChanged();
     }
 }
