@@ -2,10 +2,14 @@ package com.nj.zddemo.api;
 
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.bean.SalesInfoByBill;
 import com.nj.zddemo.bean.TodayBill;
+
+import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -51,5 +55,14 @@ public interface CommonApi {
      */
     @GET("/android/Handler1.ashx?method=getTodayXiaosh")
     Observable<TodayBill> getTodayXiaosh(@Query("czyid") String czyid);
+
+    /**
+     * 按单号查询销售单
+     * @param map
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/android/Handler1.ashx")
+    Observable<SalesInfoByBill> getSalesInfoByBill(@FieldMap Map<String, String> map);
 
 }

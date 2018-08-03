@@ -1,7 +1,9 @@
 package com.nj.zddemo.ui.activity;
 
+import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +20,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.nj.zddemo.R;
+import com.nj.zddemo.api.APIConstants;
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.SalesInfoByBill;
 import com.nj.zddemo.bean.TodayBill;
@@ -26,9 +29,13 @@ import com.nj.zddemo.mvp.presenter.impl.TodayPresenter;
 import com.nj.zddemo.mvp.view.impl.TodayView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 import com.nj.zddemo.ui.adapter.main.SalesInfoAdapter;
+import com.nj.zddemo.utils.CalendarUtils;
+import com.nj.zddemo.utils.PhoneUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseMVPActivity implements TodayView {
 
@@ -45,6 +52,9 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
     private List<SalesInfoByBill.RowsBean> mRowsBeans = new ArrayList<>();
     private RecyclerView mRecycleview;
     private SalesInfoAdapter mSalesInfoAdapter;
+    private TextView mName;
+    private TextView mGongsimc;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -74,22 +84,26 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
 
     @Override
     protected void initData() {
+        requestData();
+    }
+
+    private void requestData() {
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
+        mName.setText("操作员：" + loginResult.caozuoyuan_xm);
+        mGongsimc.setText("公司：" + loginResult.GongSiMc);
         loginResult.Id = "16";
         mTodayPresenter.getTodayBill(loginResult.Id);
-        SalesInfoByBill salesInfoByBill = new SalesInfoByBill();
-        List<SalesInfoByBill.RowsBean> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            SalesInfoByBill.RowsBean rowsBean = new SalesInfoByBill.RowsBean();
-            rowsBean.kehu_mc = "客户" + i;
-            rowsBean.list_no = "XS012018000" + i;
-            rowsBean.list_rq = "2018-08-02 " + i;
-            rowsBean.xiao_list_ze = "1234" + i;
-            list.add(rowsBean);
-        }
-        salesInfoByBill.rows = list;
-        loadSalesInfo(salesInfoByBill);
-
+        Map<String, String> map = new HashMap<>();
+        map.put("method", APIConstants.METHOD_GETLIST);
+        map.put("ch", PhoneUtils.getImei(this));
+        map.put("listCode", APIConstants.LISTCODE_XS);
+        map.put("listinfo", "");
+        map.put("state", APIConstants.STATE_SEARCH);
+        map.put("czyid", loginResult.Id);
+        map.put("pageindex", "1");
+        map.put("beginDate", CalendarUtils.getToday());
+        map.put("endDate", CalendarUtils.getToday());
+        mTodayPresenter.getSalesInfoByBill(map);
     }
 
     private void initTitle() {
@@ -125,6 +139,18 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
                 }
             }
         });
+
+        mName = findViewById(R.id.tv_name);
+        mGongsimc = findViewById(R.id.tv_gongsimc);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                requestData();
+            }
+        });
     }
 
     private void initBmbView() {
@@ -139,7 +165,9 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         mBoomMenuButton.clearBuilders();
         for (int i = 0; i < mBoomMenuButton.getPiecePlaceEnum().pieceNumber(); i++) {
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
-//                    .rotateText(true)   //设置文字循环滚动，好像不是这个
+                    .normalTextColor(Color.WHITE)
+                    .rotateImage(true)
+                    .rotateText(true)   //设置文字循环滚动，好像不是这个
                     .listener(new OnBMClickListener() { //添加点击事件
                         @Override
                         public void onBoomButtonClick(int index) {
@@ -176,6 +204,7 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
     @Override
     public void onRequestError(String msg) {
         EasyToast.newBuilder().build().show(msg);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
