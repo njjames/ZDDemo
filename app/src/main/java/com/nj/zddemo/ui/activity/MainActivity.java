@@ -212,6 +212,7 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         mContentCount.setText(todayBill.code + "单");
         mContentMoney.setText(todayBill.msg + "元");
         mToobarTitle.setText("开单数量" + todayBill.code + "单,开单金额" + todayBill.msg + "元");
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
