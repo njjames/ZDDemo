@@ -1,21 +1,24 @@
 package com.nj.zddemo.ui.activity;
 
-import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.haoge.easyandroid.easy.EasyToast;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
@@ -29,6 +32,7 @@ import com.nj.zddemo.mvp.presenter.impl.TodayPresenter;
 import com.nj.zddemo.mvp.view.impl.TodayView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 import com.nj.zddemo.ui.adapter.main.SalesInfoAdapter;
+import com.nj.zddemo.utils.BuilderManager;
 import com.nj.zddemo.utils.CalendarUtils;
 import com.nj.zddemo.utils.PhoneUtils;
 
@@ -39,7 +43,8 @@ import java.util.Map;
 
 public class MainActivity extends BaseMVPActivity implements TodayView {
 
-    private BoomMenuButton mBoomMenuButton;
+    private BoomMenuButton mBoomMenuButtonBill;
+    private BoomMenuButton mBoomMenuButtonStats;
     private Toolbar mToolbar;
     private View mToolbarOpenLayout;
     private View mToolbarCloseLayout;
@@ -55,6 +60,10 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
     private TextView mName;
     private TextView mGongsimc;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private FloatingActionMenu mFloatingActionMenu;
+    private FloatingActionButton mFabMy;
+    private FloatingActionButton mFabStas;
+    private FloatingActionButton mFabBill;
 
     @Override
     protected int getLayoutId() {
@@ -66,6 +75,39 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         initTitle();
         initBmbView();
         initRecyclerView();
+        initFalb();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_my:
+                EasyToast.newBuilder().build().show("我的");
+                break;
+            case R.id.fab_stats:
+                EasyToast.newBuilder().build().show("统计");
+                break;
+            case R.id.fab_bill:
+                EasyToast.newBuilder().build().show("业务");
+                break;
+        }
+    }
+
+    private void initFalb() {
+        mFloatingActionMenu = findViewById(R.id.fam);
+        mFloatingActionMenu.setClosedOnTouchOutside(true);
+        mFabMy = findViewById(R.id.fab_my);
+        mFabStas = findViewById(R.id.fab_stats);
+        mFabBill = findViewById(R.id.fab_bill);
+        mFabBill.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        mFabMy.setOnClickListener(this);
+        mFabStas.setOnClickListener(this);
+        mFabBill.setOnClickListener(this);
     }
 
     private void initRecyclerView() {
@@ -151,53 +193,43 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
                 requestData();
             }
         });
+
     }
 
     private void initBmbView() {
-        mBoomMenuButton = findViewById(R.id.bmb);
+        mBoomMenuButtonBill = findViewById(R.id.bmb_bill);
         //设置弹出菜单按钮的样式
-        mBoomMenuButton.setButtonEnum(ButtonEnum.TextOutsideCircle);
+        mBoomMenuButtonBill.setButtonEnum(ButtonEnum.TextInsideCircle);
         //设置右下角按钮中的显示样式（点的个数和布局）
-        mBoomMenuButton.setPiecePlaceEnum(PiecePlaceEnum.DOT_7_3);
+        mBoomMenuButtonBill.setPiecePlaceEnum(PiecePlaceEnum.DOT_7_3);
         //设置弹出菜单按钮样式（菜单按钮的个数和布局）
-        mBoomMenuButton.setButtonPlaceEnum(ButtonPlaceEnum.SC_7_3);
+        mBoomMenuButtonBill.setButtonPlaceEnum(ButtonPlaceEnum.SC_7_3);
         //循环设置每个菜单按钮的图片和文字
-        mBoomMenuButton.clearBuilders();
-        for (int i = 0; i < mBoomMenuButton.getPiecePlaceEnum().pieceNumber(); i++) {
-            TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
-                    .normalTextColor(Color.WHITE)
-                    .rotateImage(true)
-                    .rotateText(true)   //设置文字循环滚动，好像不是这个
+        mBoomMenuButtonBill.clearBuilders();
+        for (int i = 0; i < mBoomMenuButtonBill.getPiecePlaceEnum().pieceNumber(); i++) {
+            TextInsideCircleButton.Builder builder = BuilderManager.getInstance().getTextInsideCircleButtonBuilder()
                     .listener(new OnBMClickListener() { //添加点击事件
                         @Override
                         public void onBoomButtonClick(int index) {
                             Toast.makeText(MainActivity.this, "您点击了" + index, Toast.LENGTH_SHORT).show();
                         }
                     });
-            switch (i) {
-                case 0:
-                    builder.normalImageRes(R.drawable.icon_sales_page).normalTextRes(R.string.sale_name);
-                    break;
-                case 1:
-                    builder.normalImageRes(R.drawable.icon_salessearch).normalTextRes(R.string.sale_search_name);
-                    break;
-                case 2:
-                    builder.normalImageRes(R.drawable.icon_partsmanager).normalTextRes(R.string.part_name);
-                    break;
-                case 3:
-                    builder.normalImageRes(R.drawable.icon_housesearch).normalTextRes(R.string.house_name);
-                    break;
-                case 4:
-                    builder.normalImageRes(R.drawable.icon_pan_page).normalTextRes(R.string.pan_name);
-                    break;
-                case 5:
-                    builder.normalImageRes(R.drawable.icon_clintmanager).normalTextRes(R.string.clint_name);
-                    break;
-                case 6:
-                    builder.normalImageRes(R.drawable.icon_supplymanager).normalTextRes(R.string.supply_name);
-                    break;
-            }
-            mBoomMenuButton.addBuilder(builder);
+            mBoomMenuButtonBill.addBuilder(builder);
+        }
+        mBoomMenuButtonStats = findViewById(R.id.bmb_stats);
+        mBoomMenuButtonStats.setButtonEnum(ButtonEnum.TextInsideCircle);
+        mBoomMenuButtonStats.setPiecePlaceEnum(PiecePlaceEnum.DOT_6_2);
+        mBoomMenuButtonStats.setButtonPlaceEnum(ButtonPlaceEnum.SC_6_2);
+        mBoomMenuButtonStats.clearBuilders();
+        for (int i = 0; i < mBoomMenuButtonStats.getPiecePlaceEnum().pieceNumber(); i++) {
+            TextInsideCircleButton.Builder builder = BuilderManager.getInstance().getSquareTextInsideCircleButtonBuilder()
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+
+                        }
+                    });
+            mBoomMenuButtonStats.addBuilder(builder);
         }
     }
 
@@ -212,13 +244,22 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         mContentCount.setText(todayBill.code + "单");
         mContentMoney.setText(todayBill.msg + "元");
         mToobarTitle.setText("开单数量" + todayBill.code + "单,开单金额" + todayBill.msg + "元");
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
     public void loadSalesInfo(SalesInfoByBill salesInfoByBill) {
-        mRowsBeans.clear();
-        mRowsBeans.addAll(salesInfoByBill.rows);
-        mSalesInfoAdapter.notifyDataSetChanged();
+        if (!TextUtils.isEmpty(salesInfoByBill.code)) {
+            EasyToast.newBuilder().build().show(salesInfoByBill.msg);
+        } else {
+            mRowsBeans.clear();
+            mRowsBeans.addAll(salesInfoByBill.rows);
+            mSalesInfoAdapter.notifyDataSetChanged();
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 }

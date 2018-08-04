@@ -54,4 +54,15 @@
 
     <string name="toady_count">今日开单</string>
     <string name="toady_money">今日总额</string>
+
+    <string name="flb_bill_text">业务</string>
+    <string name="flb_stats_text">统计</string>
+    <string name="flb_my_text">我的</string>
+
+    <string name="report_day">日统计</string>
+    <string name="report_month">月统计</string>
+    <string name="report_year">年统计</string>
+    <string name="report_boss">老板一张表</string>
+    <string name="report_xiao">销售单汇总</string>
+    <string name="report_custom">自定义区间</string>
 </resources>

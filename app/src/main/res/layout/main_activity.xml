@@ -72,12 +72,52 @@
         </android.support.design.widget.CoordinatorLayout>
 
     <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb"
+        android:id="@+id/bmb_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_above="@id/bmb_bill"/>
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb_bill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentRight="true"
+        app:menu_icon="@drawable/ic_menu"
+        android:visibility="gone">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my"
+            app:fab_label="@string/flb_my_text"
+            app:fab_size="mini"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_stats"
+            app:fab_label="@string/flb_stats_text"
+            app:fab_size="mini"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_bill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bill"
+            app:fab_label="@string/flb_bill_text"
+            app:fab_size="mini"/>
+    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>
 
 
