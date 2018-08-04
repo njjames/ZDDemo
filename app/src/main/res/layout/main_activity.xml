@@ -76,14 +76,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_above="@id/bmb_bill"/>
+        android:layout_above="@id/bmb_bill"
+        app:bmb_normalColor="@color/bmb_color"/>
 
     <com.nightonke.boommenu.BoomMenuButton
         android:id="@+id/bmb_bill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        app:bmb_normalColor="@color/bmb_color"/>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fam"

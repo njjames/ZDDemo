@@ -75,37 +75,37 @@ public class BuilderManager {
     private static int statsTitleResourceIndex = 0;
     private static int statsColorResourceIndex = 0;
 
-    public int getBillImageResource() {
+    private int getBillImageResource() {
         if (billImageResourceIndex >= billImageResources.length)
             billImageResourceIndex = 0;
         return billImageResources[billImageResourceIndex++];
     }
 
-    public int getBillTitleResource() {
+    private int getBillTitleResource() {
         if (billTitleResourceIndex >= billTitleResources.length)
             billTitleResourceIndex = 0;
         return billTitleResources[billTitleResourceIndex++];
     }
 
-    public int getBillColorResource() {
+    private int getBillColorResource() {
         if (billColorResourceIndex >= billColorResources.length)
             billColorResourceIndex = 0;
         return billColorResources[billColorResourceIndex++];
     }
 
-    public int getStatsImageResource() {
+    private int getStatsImageResource() {
         if (statsImageResourceIndex >= statsImageResources.length)
             statsImageResourceIndex = 0;
         return statsImageResources[statsImageResourceIndex++];
     }
 
-    public int getStatsTitleResource() {
+    private int getStatsTitleResource() {
         if (statsTitleResourceIndex >= statsTitleResources.length)
             statsTitleResourceIndex = 0;
         return statsTitleResources[statsTitleResourceIndex++];
     }
 
-    public int getStatsColorResource() {
+    private int getStatsColorResource() {
         if (statsColorResourceIndex >= statsColorResources.length)
             statsColorResourceIndex = 0;
         return statsColorResources[statsColorResourceIndex++];

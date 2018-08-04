@@ -1,5 +1,6 @@
 package com.nj.zddemo.ui.activity;
 
+import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -99,12 +100,6 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
         mFabMy = findViewById(R.id.fab_my);
         mFabStas = findViewById(R.id.fab_stats);
         mFabBill = findViewById(R.id.fab_bill);
-        mFabBill.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
         mFabMy.setOnClickListener(this);
         mFabStas.setOnClickListener(this);
         mFabBill.setOnClickListener(this);
@@ -198,6 +193,7 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
 
     private void initBmbView() {
         mBoomMenuButtonBill = findViewById(R.id.bmb_bill);
+        mBoomMenuButtonBill.setShadowEffect(false);
         //设置弹出菜单按钮的样式
         mBoomMenuButtonBill.setButtonEnum(ButtonEnum.TextInsideCircle);
         //设置右下角按钮中的显示样式（点的个数和布局）
@@ -217,6 +213,7 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
             mBoomMenuButtonBill.addBuilder(builder);
         }
         mBoomMenuButtonStats = findViewById(R.id.bmb_stats);
+        mBoomMenuButtonStats.setShadowEffect(false);
         mBoomMenuButtonStats.setButtonEnum(ButtonEnum.TextInsideCircle);
         mBoomMenuButtonStats.setPiecePlaceEnum(PiecePlaceEnum.DOT_6_2);
         mBoomMenuButtonStats.setButtonPlaceEnum(ButtonPlaceEnum.SC_6_2);
