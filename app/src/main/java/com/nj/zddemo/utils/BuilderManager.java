@@ -2,6 +2,7 @@ package com.nj.zddemo.utils;
 
 import android.graphics.Color;
 
+import com.haoge.easyandroid.mvp.MVPView;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nj.zddemo.R;
 

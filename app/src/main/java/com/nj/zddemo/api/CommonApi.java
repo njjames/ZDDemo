@@ -2,6 +2,7 @@ package com.nj.zddemo.api;
 
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.bean.SalesInfoByBill;
 import com.nj.zddemo.bean.TodayBill;
 
@@ -58,6 +59,7 @@ public interface CommonApi {
 
     /**
      * 按单号查询销售单
+     *
      * @param map
      * @return
      */
@@ -65,4 +67,12 @@ public interface CommonApi {
     @POST("/android/Handler1.ashx")
     Observable<SalesInfoByBill> getSalesInfoByBill(@FieldMap Map<String, String> map);
 
+    /**
+     * 库存商品查询
+     * @param map
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/android/Handler1.ashx")
+    Observable<PartInfoOfStock> getPartInfoOfStock(@FieldMap Map<String, String> map);
 }

@@ -1,5 +1,6 @@
 package com.nj.zddemo.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
@@ -207,7 +208,11 @@ public class MainActivity extends BaseMVPActivity implements TodayView {
                     .listener(new OnBMClickListener() { //添加点击事件
                         @Override
                         public void onBoomButtonClick(int index) {
-                            Toast.makeText(MainActivity.this, "您点击了" + index, Toast.LENGTH_SHORT).show();
+                            switch (index) {
+                                case 0: // 库存查询
+                                    startActivity(new Intent(MainActivity.this, StockQueryActivity.class));
+                                    break;
+                            }
                         }
                     });
             mBoomMenuButtonBill.addBuilder(builder);
