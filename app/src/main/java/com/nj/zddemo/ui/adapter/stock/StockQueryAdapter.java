@@ -1,6 +1,11 @@
 package com.nj.zddemo.ui.adapter.stock;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +23,8 @@ import java.util.List;
 
 public class StockQueryAdapter extends RecyclerView.Adapter<StockQueryAdapter.ViewHolder> {
     private List<PartInfoOfStock.RowsBean> mList;
+    private ConstraintSet mConstraintSet_shrink = new ConstraintSet();
+    private ConstraintSet mConstraintSet_spread = new ConstraintSet();
 
     public StockQueryAdapter(List<PartInfoOfStock.RowsBean> list) {
         mList = list;
@@ -26,8 +33,20 @@ public class StockQueryAdapter extends RecyclerView.Adapter<StockQueryAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.stock_recycler_item, parent, false);
+                .inflate(R.layout.stock_recycler_shrink_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        //All children of ConstraintLayout must have ids to use ConstraintSet
+        final ConstraintLayout constraintLayout = view.findViewById(R.id.constraintlayout);
+        mConstraintSet_shrink.clone(constraintLayout);
+        mConstraintSet_spread.clone(parent.getContext(), R.layout.stock_recycler_spread_item);
+        viewHolder.mZoom.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                mConstraintSet_spread.applyTo(constraintLayout);
+            }
+        });
         return viewHolder;
     }
 
@@ -55,6 +74,7 @@ public class StockQueryAdapter extends RecyclerView.Adapter<StockQueryAdapter.Vi
         private final TextView mPlace;
         private final TextView mPrice;
         private final TextView mStock;
+        private final ImageView mZoom;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -66,6 +86,7 @@ public class StockQueryAdapter extends RecyclerView.Adapter<StockQueryAdapter.Vi
             mPlace = itemView.findViewById(R.id.tv_place);
             mPrice = itemView.findViewById(R.id.tv_price);
             mStock = itemView.findViewById(R.id.tv_stock);
+            mZoom = itemView.findViewById(R.id.iv_zoom);
         }
     }
 }

@@ -19,5 +19,4 @@ public interface LoginView extends MVPView {
      void loadLoginResult(LoginResult loginResult);
 
      void loadWZZLIP(String data);
-
 }

@@ -2,20 +2,22 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:id="@+id/constraintlayout_in"
+    android:id="@+id/constraintlayout"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
+    <com.nj.zddemo.view.RoundImageView
         android:id="@+id/iv_image"
-        android:layout_width="@dimen/qb_px_70"
-        android:layout_height="@dimen/qb_px_70"
-        android:src="@drawable/icon_part"
+        android:layout_width="@dimen/qb_px_140"
+        android:layout_height="@dimen/qb_px_140"
+        app:type="round"
+        app:borderRadius="@dimen/qb_px_2"
+        android:src="@drawable/ic_test"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginLeft="@dimen/qb_px_7"/>
+        android:layout_marginTop="@dimen/qb_px_10"/>
 
     <TextView
         android:id="@+id/tv_name"
@@ -23,11 +25,11 @@
         android:layout_height="wrap_content"
         android:text="商品名称"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:lines="1"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="@dimen/qb_px_10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image"
         android:layout_marginTop="@dimen/qb_px_5"/>
 
     <TextView
@@ -36,10 +38,11 @@
         android:layout_height="wrap_content"
         android:text="(配件编码)"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:lines="1"
-        app:layout_constraintLeft_toRightOf="@+id/tv_name"
-        app:layout_constraintTop_toTopOf="@+id/tv_name"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"/>
 
     <TextView
         android:id="@+id/tv_tp_text"
@@ -47,18 +50,18 @@
         android:layout_height="wrap_content"
         android:text="图号："
         android:textColor="@color/gray"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_no"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_tp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10001"
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_tp_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_no"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_type_text"
@@ -66,18 +69,18 @@
         android:layout_height="wrap_content"
         android:text="车型："
         android:textColor="@color/gray"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_tp_text"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2001"
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_type_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tp_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_tp_text"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_brand_text"
@@ -85,18 +88,18 @@
         android:layout_height="wrap_content"
         android:text="品牌："
         android:textColor="@color/gray"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_type_text"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_brand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="品牌："
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_brand_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_type_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_type_text"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_place_text"
@@ -106,16 +109,17 @@
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_brand_text"
         app:layout_constraintTop_toBottomOf="@+id/tv_type"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="001"
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_place_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_type"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_type"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_price_text"
@@ -123,27 +127,18 @@
         android:layout_height="wrap_content"
         android:text="一级销价："
         android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_place"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="100"
         android:textColor="@color/orange"
         app:layout_constraintLeft_toRightOf="@+id/tv_price_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_place"/>
-
-    <View
-        android:id="@+id/divide"
-        android:layout_width="@dimen/qb_px_1"
-        android:layout_height="@dimen/qb_px_20"
-        android:background="@color/color_frame"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_price"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_place"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_stock_text"
@@ -151,36 +146,28 @@
         android:layout_height="wrap_content"
         android:text="总库存："
         android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/divide"
-        app:layout_constraintTop_toBottomOf="@+id/tv_place"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_price"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tv_stock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="20"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/tv_stock_text"
-        app:layout_constraintTop_toBottomOf="@+id/tv_place"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_price"
+        android:textSize="18sp"/>
 
     <ImageView
         android:id="@+id/iv_zoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_zoom_in"
+        android:src="@drawable/ic_zoom_out"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/qb_px_1"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/color_frame"
-        android:layout_marginRight="@dimen/qb_px_7"/>
+        android:layout_marginBottom="@dimen/qb_px_5"/>
 
 </android.support.constraint.ConstraintLayout>
