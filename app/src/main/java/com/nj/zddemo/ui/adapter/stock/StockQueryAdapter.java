@@ -35,7 +35,9 @@ public class StockQueryAdapter extends RecyclerView.Adapter<StockQueryAdapter.Vi
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.stock_recycler_shrink_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        //All children of ConstraintLayout must have ids to use ConstraintSet
+        //1，All children of ConstraintLayout must have ids to use ConstraintSet
+        //2，控件的一些属性必须都一样，才能达到一致的效果，例如android:gravity="end"
+        //3，原页面中有，第二个页面没有写的话也会显示出来
         final ConstraintLayout constraintLayout = view.findViewById(R.id.constraintlayout);
         mConstraintSet_shrink.clone(constraintLayout);
         mConstraintSet_spread.clone(parent.getContext(), R.layout.stock_recycler_spread_item);

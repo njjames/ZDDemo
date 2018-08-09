@@ -9,8 +9,8 @@
 
     <com.nj.zddemo.view.RoundImageView
         android:id="@+id/iv_image"
-        android:layout_width="@dimen/qb_px_80"
-        android:layout_height="@dimen/qb_px_80"
+        android:layout_width="@dimen/qb_px_76"
+        android:layout_height="@dimen/qb_px_76"
         app:type="round"
         app:borderRadius="@dimen/qb_px_2"
         android:src="@drawable/ic_test"
@@ -30,7 +30,7 @@
         app:layout_constraintLeft_toRightOf="@+id/iv_image"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="@dimen/qb_px_7"
-        android:layout_marginTop="@dimen/qb_px_5"/>
+        android:layout_marginTop="@dimen/qb_px_2"/>
 
     <TextView
         android:id="@+id/tv_no"
@@ -51,7 +51,8 @@
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/iv_image"
         app:layout_constraintTop_toBottomOf="@+id/tv_name"
-        android:layout_marginLeft="@dimen/qb_px_7"/>
+        android:layout_marginLeft="@dimen/qb_px_7"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_tp"
@@ -69,7 +70,8 @@
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/iv_image"
         app:layout_constraintTop_toBottomOf="@+id/tv_tp_text"
-        android:layout_marginLeft="@dimen/qb_px_7"/>
+        android:layout_marginLeft="@dimen/qb_px_7"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_type"
@@ -87,7 +89,8 @@
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/iv_image"
         app:layout_constraintTop_toBottomOf="@+id/tv_type_text"
-        android:layout_marginLeft="@dimen/qb_px_7"/>
+        android:layout_marginLeft="@dimen/qb_px_7"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_brand"
@@ -105,7 +108,8 @@
         android:textColor="@color/gray"
         app:layout_constraintLeft_toRightOf="@+id/tv_brand_text"
         app:layout_constraintTop_toBottomOf="@+id/tv_type"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_place"
@@ -123,7 +127,8 @@
         android:textColor="@android:color/black"
         app:layout_constraintLeft_toRightOf="@+id/iv_image"
         app:layout_constraintTop_toBottomOf="@+id/tv_place"
-        android:layout_marginLeft="@dimen/qb_px_7"/>
+        android:layout_marginLeft="@dimen/qb_px_7"
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_price"
@@ -133,24 +138,16 @@
         app:layout_constraintLeft_toRightOf="@+id/tv_price_text"
         app:layout_constraintTop_toBottomOf="@+id/tv_place"/>
 
-    <View
-        android:id="@+id/divide"
-        android:layout_width="@dimen/qb_px_1"
-        android:layout_height="@dimen/qb_px_20"
-        android:background="@color/color_frame"
-        app:layout_constraintLeft_toRightOf="@+id/iv_image"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_price"/>
-
     <TextView
         android:id="@+id/tv_stock_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="总库存："
         android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/divide"
+        app:layout_constraintLeft_toRightOf="@+id/tv_price_text"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_place"
-        android:layout_marginLeft="@dimen/qb_px_10"/>
+        android:gravity="end"/>
 
     <TextView
         android:id="@+id/tv_stock"
@@ -171,13 +168,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="@dimen/qb_px_7"/>
 
+
     <View
-        android:id="@+id/bottom_dicide"
+        android:id="@+id/bottom_divide"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/qb_px_1"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/color_frame"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_price_text"
+        android:background="@color/color_frame"
+        android:layout_marginTop="@dimen/qb_px_2"/>
 
 </android.support.constraint.ConstraintLayout>
