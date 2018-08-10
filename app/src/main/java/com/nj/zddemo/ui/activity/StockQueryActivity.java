@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.haoge.easyandroid.easy.EasySharedPreferences;
@@ -36,6 +37,10 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private LinearLayout mFilter;
     private StockPresenter mStockPresenter;
     private StockQueryAdapter mStockQueryAdapter;
+    private View mFilterDrawer;
+    private View mCategoryDrawer;
+    private LinearLayout mAllCategory;
+    private ImageView mBack;
 
     @Override
     protected int getLayoutId() {
@@ -46,9 +51,14 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     protected void initPage(Bundle savedInstanceState) {
         mRecyclerView = findViewById(R.id.rv_stock);
         mDrawerLayout = findViewById(R.id.drawerlayout);
-        findViewById(R.id.ll_filter_drawer);
+        mFilterDrawer = findViewById(R.id.ll_filter_drawer);
+        mCategoryDrawer = findViewById(R.id.ll_category_drawer);
+        mAllCategory = mFilterDrawer.findViewById(R.id.ll_all_category);
+        mBack = mCategoryDrawer.findViewById(R.id.iv_back);
         mFilter = findViewById(R.id.ll_filter);
         mFilter.setOnClickListener(this);
+        mAllCategory.setOnClickListener(this);
+        mBack.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
@@ -89,7 +99,13 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_filter:
-//                mDrawerLayout.openDrawer();
+                mDrawerLayout.openDrawer(mFilterDrawer);
+                break;
+            case R.id.ll_all_category:
+                mDrawerLayout.openDrawer(mCategoryDrawer);
+                break;
+            case R.id.iv_back:
+                mDrawerLayout.closeDrawer(mCategoryDrawer);
                 break;
         }
     }

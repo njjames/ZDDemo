@@ -24,6 +24,7 @@
         android:background="@color/color_frame"/>
 
     <LinearLayout
+        android:id="@+id/ll_all_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -41,10 +42,10 @@
 
         <TextView
             android:id="@+id/tv_category_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@color/colorPrimary"
             android:gravity="right"/>
 
         <ImageView
@@ -62,7 +63,9 @@
         android:numColumns="3"
         android:horizontalSpacing="@dimen/qb_px_15"
         android:verticalSpacing="@dimen/qb_px_10"
-        android:padding="@dimen/qb_px_10"></GridView>
+        android:padding="@dimen/qb_px_10">
+
+    </GridView>
 
     <View
         android:layout_width="match_parent"
