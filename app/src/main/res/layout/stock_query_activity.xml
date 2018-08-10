@@ -25,60 +25,22 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="@dimen/qb_px_220"
+        android:id="@+id/ll_filter_drawer"
+        android:layout_width="@dimen/qb_px_280"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="end"
         android:background="@color/filter_bg_color">
+        <include layout="@layout/stock_filter_layout" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/qb_px_30"
-            android:background="@drawable/bg_main"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_text"
-                android:paddingLeft="@dimen/qb_px_10"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="@dimen/qb_px_10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_category_text"/>
-
-            <TextView
-                android:id="@+id/tv_category_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <ImageView
-                android:id="@+id/iv_showmore"
-                android:layout_width="@dimen/qb_px_12"
-                android:layout_height="@dimen/qb_px_12"
-                android:src="@drawable/ic_arrow_down"/>
-        </LinearLayout>
-
-        <GridView
-            android:id="@+id/gv_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="3"
-            android:horizontalSpacing="@dimen/qb_px_15"
-            android:verticalSpacing="@dimen/qb_px_10"
-            android:padding="@dimen/qb_px_10">
-        </GridView>
-
+    <LinearLayout
+        android:id="@+id/ll_category_drawer"
+        android:layout_width="@dimen/qb_px_280"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="end"
+        android:background="@color/filter_bg_color">
+        <include layout="@layout/category_filter_layout" />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

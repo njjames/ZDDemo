@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_30"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_text"
+            android:paddingLeft="@dimen/qb_px_10"
+            android:textColor="@color/filter_text_color" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_1"
+        android:background="@color/color_frame"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/qb_px_6"
+        android:paddingBottom="@dimen/qb_px_6"
+        android:paddingLeft="@dimen/qb_px_10"
+        android:paddingRight="@dimen/qb_px_10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_category_text"
+            android:textColor="@color/filter_text_color"/>
+
+        <TextView
+            android:id="@+id/tv_category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/holo_red_dark"
+            android:gravity="right"/>
+
+        <ImageView
+            android:id="@+id/iv_showmore"
+            android:layout_width="@dimen/qb_px_22"
+            android:layout_height="@dimen/qb_px_22"
+            android:src="@drawable/ic_arrow_down"
+            android:padding="@dimen/qb_px_5"/>
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/gv_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:horizontalSpacing="@dimen/qb_px_15"
+        android:verticalSpacing="@dimen/qb_px_10"
+        android:padding="@dimen/qb_px_10"></GridView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_1"
+        android:background="@color/color_frame"/>
+</LinearLayout>

@@ -46,6 +46,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     protected void initPage(Bundle savedInstanceState) {
         mRecyclerView = findViewById(R.id.rv_stock);
         mDrawerLayout = findViewById(R.id.drawerlayout);
+        findViewById(R.id.ll_filter_drawer);
         mFilter = findViewById(R.id.ll_filter);
         mFilter.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -88,7 +89,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_filter:
-                mDrawerLayout.openDrawer(Gravity.END);
+//                mDrawerLayout.openDrawer();
                 break;
         }
     }

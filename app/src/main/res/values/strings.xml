@@ -67,5 +67,7 @@
     <string name="report_custom">自定义区间</string>
 
     <string name="filter_text">筛选</string>
-    <string name="filter_category_text">类别</string>
+    <string name="filter_category_text">全部类别</string>
+
+    <string name="category_text">分类</string>
 </resources>
