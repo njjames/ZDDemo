@@ -11,18 +11,21 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.haoge.easyandroid.easy.EasySharedPreferences;
 import com.haoge.easyandroid.easy.EasyToast;
 import com.nj.zddemo.R;
 import com.nj.zddemo.api.APIConstants;
 import com.nj.zddemo.bean.LoginResult;
+import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.presenter.impl.StockPresenter;
 import com.nj.zddemo.mvp.view.impl.StockView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
 import com.nj.zddemo.ui.adapter.stock.StockQueryAdapter;
+import com.nj.zddemo.ui.adapter.tree.PartTreeListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ import java.util.Map;
 
 public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private List<PartInfoOfStock.RowsBean> mList = new ArrayList<>();
+    private List<PartCategory.RowsBean> mCategoryList = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private DrawerLayout mDrawerLayout;
@@ -41,6 +45,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private View mCategoryDrawer;
     private LinearLayout mAllCategory;
     private ImageView mBack;
+    private ListView mCategortListView;
+    private PartTreeListViewAdapter mPartTreeAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -55,6 +61,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mCategoryDrawer = findViewById(R.id.ll_category_drawer);
         mAllCategory = mFilterDrawer.findViewById(R.id.ll_all_category);
         mBack = mCategoryDrawer.findViewById(R.id.iv_back);
+        mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
         mFilter = findViewById(R.id.ll_filter);
         mFilter.setOnClickListener(this);
         mAllCategory.setOnClickListener(this);
@@ -63,6 +70,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
         mRecyclerView.setAdapter(mStockQueryAdapter);
+
     }
 
     @Override
@@ -102,6 +110,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 mDrawerLayout.openDrawer(mFilterDrawer);
                 break;
             case R.id.ll_all_category:
+                mStockPresenter.getAllPartCatrgory();
                 mDrawerLayout.openDrawer(mCategoryDrawer);
                 break;
             case R.id.iv_back:
@@ -120,5 +129,19 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mList.clear();
         mList.addAll(partInfoOfStock.rows);
         mStockQueryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void loadAllPartCategory(PartCategory partCategory) {
+        mCategoryList.clear();
+        mCategoryList.addAll(partCategory.rows);
+        try {
+            mPartTreeAdapter = new PartTreeListViewAdapter(mCategortListView, this, mCategoryList, 0);
+            mCategortListView.setAdapter(mPartTreeAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 不能notify,没有作用
+        //mPartTreeAdapter.notifyDataSetChanged();
     }
 }

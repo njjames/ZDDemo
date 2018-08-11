@@ -1,5 +1,6 @@
 package com.nj.zddemo.mvp.view.impl;
 
+import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.mvp.view.base.MVPView;
 
@@ -11,4 +12,6 @@ public interface StockView extends MVPView {
     void onRequestError(String msg);
 
     void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock);
+
+    void loadAllPartCategory(PartCategory partCategory);
 }

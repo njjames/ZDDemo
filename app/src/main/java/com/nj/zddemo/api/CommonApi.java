@@ -2,6 +2,7 @@ package com.nj.zddemo.api;
 
 import com.nj.zddemo.bean.LoginResult;
 import com.nj.zddemo.bean.OnlineInfo;
+import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.bean.SalesInfoByBill;
 import com.nj.zddemo.bean.TodayBill;
@@ -75,4 +76,11 @@ public interface CommonApi {
     @FormUrlEncoded
     @POST("/android/Handler1.ashx")
     Observable<PartInfoOfStock> getPartInfoOfStock(@FieldMap Map<String, String> map);
+
+    /**
+     * 获取全部配件分类信息（准确应该是根类别）
+     * @return
+     */
+    @GET("/android/Handler1.ashx?method=getPeijLb")
+    Observable<PartCategory> getAllPartCategory();
 }

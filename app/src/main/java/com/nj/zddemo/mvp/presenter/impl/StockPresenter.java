@@ -1,5 +1,6 @@
 package com.nj.zddemo.mvp.presenter.impl;
 
+import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.mvp.model.impl.StockModel;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
@@ -42,6 +43,40 @@ public class StockPresenter extends MVPPresenter<StockView> {
                     public void onNext(PartInfoOfStock partInfoOfStock) {
                         if (isViewAttached()) {
                             getView().loadPartInfoOfStock(partInfoOfStock);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getView().onRequestError("数据加载失败o(╥﹏╥)o");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void getAllPartCatrgory() {
+        if (!isViewAttached()) {
+            return;
+        }
+        mStockModel.getAllPartCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PartCategory>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscription(d);
+                    }
+
+                    @Override
+                    public void onNext(PartCategory partCategory) {
+                        if (isViewAttached()) {
+                            getView().loadAllPartCategory(partCategory);
                         }
                     }
 

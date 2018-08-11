@@ -26,6 +26,17 @@
             android:layout_gravity="center_horizontal"
             android:padding="@dimen/qb_px_4"
             android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_text"
+            android:textColor="@color/filter_text_color"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/qb_px_4"/>
     </RelativeLayout>
 
 
@@ -37,7 +48,9 @@
     <ListView
         android:id="@+id/lv_category"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/qb_px_4"
+        android:paddingRight="@dimen/qb_px_4">
 
     </ListView>
 

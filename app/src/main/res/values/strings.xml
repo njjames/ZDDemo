@@ -70,4 +70,6 @@
     <string name="filter_category_text">全部类别</string>
 
     <string name="category_text">分类</string>
+
+    <string name="confirm_text">确定</string>
 </resources>
