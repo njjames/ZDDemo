@@ -112,7 +112,7 @@
             android:textColor="@color/filter_text_color"/>
 
         <EditText
-            android:id="@+id/tv_tp_name"
+            android:id="@+id/et_tp_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -169,6 +169,86 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:paddingLeft="@dimen/qb_px_10"
-        android:paddingRight="@dimen/qb_px_10">
+        android:paddingRight="@dimen/qb_px_10"
+        android:paddingBottom="@dimen/qb_px_6">
     </GridView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_1"
+        android:background="@color/color_frame"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/qb_px_6"
+        android:paddingBottom="@dimen/qb_px_6"
+        android:paddingLeft="@dimen/qb_px_10"
+        android:paddingRight="@dimen/qb_px_10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_locator_text"
+            android:textColor="@color/filter_text_color"/>
+
+        <EditText
+            android:id="@+id/et_locater_begin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimary"
+            android:maxLines="1"
+            android:background="@null"
+            android:layout_marginLeft="@dimen/qb_px_4"
+            android:gravity="right"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_locator_to_text"
+            android:textColor="@color/filter_text_color"/>
+
+        <EditText
+            android:id="@+id/et_locater_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimary"
+            android:maxLines="1"
+            android:background="@null"
+            android:layout_marginLeft="@dimen/qb_px_4"
+            android:gravity="right"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_reset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/filter_reset_text"
+            android:textColor="@android:color/black"
+            android:background="@drawable/btn_reset_selector"/>
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/filter_confirm_text"
+            android:textColor="@android:color/black"
+            android:background="@drawable/btn_confirm_normal_bg"/>
+    </LinearLayout>
 </LinearLayout>

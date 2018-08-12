@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,6 +73,11 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private TextView mChooseStockName;
     private LinearLayout mAllStock;
     private ImageView mShowMoreStock;
+    private EditText mTpName;
+    private EditText mLocaterBegin;
+    private EditText mLocaterEnd;
+    private Button mBtnRest;
+    private Button mBtnConfirm;
 
     @Override
     protected int getLayoutId() {
@@ -91,6 +98,11 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mChooseStockName = mFilterDrawer.findViewById(R.id.tv_choose_stock_name);
         mAllStock = mFilterDrawer.findViewById(R.id.ll_show_all_stock);
         mShowMoreStock = mFilterDrawer.findViewById(R.id.iv_showmore_stock);
+        mTpName = mFilterDrawer.findViewById(R.id.et_tp_name);
+        mLocaterBegin = mFilterDrawer.findViewById(R.id.et_locater_begin);
+        mLocaterEnd = mFilterDrawer.findViewById(R.id.et_locater_end);
+        mBtnRest = mFilterDrawer.findViewById(R.id.btn_reset);
+        mBtnConfirm = mFilterDrawer.findViewById(R.id.btn_confirm);
         mBack = mCategoryDrawer.findViewById(R.id.iv_back);
         mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
         mCategoryDrawerAllCategory = mCategoryDrawer.findViewById(R.id.ll_categorydrawer_all);
@@ -105,6 +117,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mCategoryConfirm.setOnClickListener(this);
         mAllType.setOnClickListener(this);
         mAllStock.setOnClickListener(this);
+        mBtnRest.setOnClickListener(this);
+        mBtnConfirm.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
@@ -181,17 +195,29 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
             case R.id.ll_show_all_stock:
                 showMoreStock();
                 break;
+            case R.id.btn_reset:
+                clearAll();
+                break;
+            case R.id.btn_confirm:
+                break;
         }
     }
 
+    private void clearAll() {
+        mFilterDrawerPartCategory.setText("");
+        mFilterDrawerTypeCategory.setText("");
+        mTpName.getText().clear();
+        mChooseStockName.setText("");
+        mLocaterBegin.getText().clear();
+        mLocaterEnd.getText().clear();
+    }
+
     private void showMoreStock() {
-        // Todo 这里逻辑还是有点问题，需要改进
         if (mStockShowList.size() == 6 && mStockAllList.size() > 6) { // 当现在显示的是6个，并且全部的总数大于6个，就打开显示全部的
             mStockShowList.clear();
             mStockShowList.addAll(mStockAllList);
             mStockInfoAdapter.notifyDataSetChanged();
-        }
-        if (mStockShowList.size() > 6) { // 表示已经全部显示，那么点击之后只显示6个
+        } else if (mStockShowList.size() > 6) { // 表示已经全部显示，那么点击之后只显示6个
             mStockShowList.clear();
             for (int i = 0; i < 6; i++) {
                 mStockShowList.add(mStockAllList.get(i));
@@ -295,22 +321,22 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     @Override
     public void loadStockInfo(StockInfo stockInfo) {
         mStockShowList.clear();
+        mStockAllList.clear();
         StockInfo.RowsBean rowsBean = new StockInfo.RowsBean();
         rowsBean.cangk_dm = "";
         rowsBean.cangk_mc = "全部";
-        mStockShowList.add(rowsBean);
+        mStockAllList.add(rowsBean);
+        mStockAllList.addAll(stockInfo.rows);
         // 如果仓库数量大于5，就只显示前5个+一个全部
-        if (stockInfo.rows.size() > 5) {
+        if (mStockAllList.size() > 6) {
             mShowMoreStock.setVisibility(View.VISIBLE);
-            for (int i = 0; i < 5; i++) {
-                mStockShowList.add(stockInfo.rows.get(i));
+            for (int i = 0; i < 6; i++) {
+                mStockShowList.add(mStockAllList.get(i));
             }
         } else {
             mShowMoreStock.setVisibility(View.INVISIBLE);
-            mStockShowList.addAll(stockInfo.rows);
+            mStockShowList.addAll(mStockAllList);
         }
-        mStockAllList.add(rowsBean);
-        mStockAllList.addAll(stockInfo.rows);
         mStockInfoAdapter.notifyDataSetChanged();
         hideLoadingDialog();
     }

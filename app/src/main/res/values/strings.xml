@@ -70,8 +70,12 @@
     <string name="filter_part_category_text">全部类别</string>
     <string name="filter_type_category_text">全部车型</string>
     <string name="filter_tp_text">图号</string>
+    <string name="filter_locator_text">货位</string>
+    <string name="filter_locator_to_text">到</string>
     <string name="filter_stock_text">仓库</string>
     <string name="filter_category_text">全部</string>
+    <string name="filter_reset_text">重置</string>
+    <string name="filter_confirm_text">确定</string>
 
     <string name="category_text">分类</string>
 
