@@ -21,14 +21,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/filter_text_color"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:text="@string/category_text"
             android:layout_gravity="center_horizontal"
             android:padding="@dimen/qb_px_4"
             android:layout_centerInParent="true"/>
 
         <TextView
-            android:id="@+id/tv_confirm"
+            android:id="@+id/tv_category_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm_text"
@@ -39,6 +39,37 @@
             android:paddingRight="@dimen/qb_px_4"/>
     </RelativeLayout>
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qb_px_1"
+        android:background="@color/color_frame"/>
+
+    <LinearLayout
+        android:id="@+id/ll_categorydrawer_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/qb_px_4"
+        android:paddingRight="@dimen/qb_px_4">
+
+        <TextView
+            android:id="@+id/tv_top_all_catrgory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/filter_category_text"
+            android:textColor="@color/filter_text_color"
+            android:textSize="14sp"
+            android:padding="@dimen/qb_px_4"/>
+
+        <ImageView
+            android:id="@+id/iv_top_choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_choose"
+            android:visibility="invisible"/>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

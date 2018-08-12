@@ -11,13 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/filter_text_color"
-        android:textSize="16sp"
-        android:padding="@dimen/qb_px_4"/>
+        android:textSize="14sp"
+        android:padding="@dimen/qb_px_8"/>
 
     <ImageView
         android:id="@+id/iv_choose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_choose"
-        android:visibility="invisible"/>
+        android:src="@drawable/ic_choose"/>
 </LinearLayout>

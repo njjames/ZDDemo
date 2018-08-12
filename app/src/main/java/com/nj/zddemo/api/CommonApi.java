@@ -5,7 +5,9 @@ import com.nj.zddemo.bean.OnlineInfo;
 import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.bean.SalesInfoByBill;
+import com.nj.zddemo.bean.StockInfo;
 import com.nj.zddemo.bean.TodayBill;
+import com.nj.zddemo.bean.TypeCategory;
 
 import java.util.Map;
 
@@ -78,9 +80,25 @@ public interface CommonApi {
     Observable<PartInfoOfStock> getPartInfoOfStock(@FieldMap Map<String, String> map);
 
     /**
-     * 获取全部配件分类信息（准确应该是根类别）
+     * 获取全部配件分类信息
      * @return
      */
     @GET("/android/Handler1.ashx?method=getPeijLb")
     Observable<PartCategory> getAllPartCategory();
+
+    /**
+     * 获取全部车型分类信息
+     * @return
+     */
+    @GET("/android/Handler1.ashx?method=getPeijCx")
+    Observable<TypeCategory> getAllTypeCategory();
+
+    /**
+     * 获取仓库的信息
+     * @param czyid
+     * @param type
+     * @return
+     */
+    @GET("/android/Handler1.ashx?method=getCk")
+    Observable<StockInfo> getStockInfo(@Query("czyid") String czyid, @Query("type") int type);
 }

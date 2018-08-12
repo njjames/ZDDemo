@@ -29,6 +29,9 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter {
      */
     protected List<Node> mAllNodes;
 
+    // 当前点击的位置，默认为-1
+    private int currentPosition = -1;
+
     /**
      * 点击的回调接口
      */
@@ -36,7 +39,7 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter {
 
     // 这是添加的自定义的点击事件
     public interface OnTreeNodeClickListener {
-        void onClick(Node node, int position);
+        void onClick(View view, Node node, int position);
     }
 
     public void setOnTreeNodeClickListener(OnTreeNodeClickListener onTreeNodeClickListener) {
@@ -64,9 +67,10 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter {
         mTree.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentPosition = position;
                 expandOrCollapse(position);
                 if (onTreeNodeClickListener != null) {
-                    onTreeNodeClickListener.onClick(mNodes.get(position), position);
+                    onTreeNodeClickListener.onClick(view, mNodes.get(position), position);
                 }
             }
         });
@@ -83,8 +87,9 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter {
             if (!n.isLeaf()) {
                 n.setExpand(!n.isExpand());
                 mNodes = TreeHelper.filterVisibleNode(mAllNodes);
-                notifyDataSetChanged();// 刷新视图
             }
+            // 只要点击就刷新试图，用来更新点击的颜色
+            notifyDataSetChanged();// 刷新视图
         }
     }
 
@@ -106,12 +111,12 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Node node = mNodes.get(position);
-        convertView = getConvertView(node, position, convertView, parent);
+        convertView = getConvertView(node, position, convertView, parent, currentPosition);
         // 设置内边距
         convertView.setPadding(node.getLevel() * 70, 0, 0, 0);
         return convertView;
     }
 
-    public abstract View getConvertView(Node node, int position, View convertView, ViewGroup parent);
+    public abstract View getConvertView(Node node, int position, View convertView, ViewGroup parent, int currentPosition);
 
 }

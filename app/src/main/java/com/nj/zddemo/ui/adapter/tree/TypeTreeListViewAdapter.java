@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.nj.zddemo.R;
 import com.nj.zddemo.bean.PartCategory;
+import com.nj.zddemo.bean.TypeCategory;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by nj on 2018/8/11.
  */
 
-public class PartTreeListViewAdapter extends TreeListViewAdapter<PartCategory.RowsBean> {
+public class TypeTreeListViewAdapter extends TreeListViewAdapter<TypeCategory.RowsBean> {
 
     private ImageView mChoose;
     private TextView mCategory;
@@ -31,7 +32,7 @@ public class PartTreeListViewAdapter extends TreeListViewAdapter<PartCategory.Ro
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    public PartTreeListViewAdapter(ListView mTree, Context context, List<PartCategory.RowsBean> datas, int defaultExpandLevel)
+    public TypeTreeListViewAdapter(ListView mTree, Context context, List<TypeCategory.RowsBean> datas, int defaultExpandLevel)
             throws IllegalArgumentException, IllegalAccessException {
         super(mTree, context, datas, defaultExpandLevel);
 
