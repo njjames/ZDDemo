@@ -248,7 +248,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/filter_confirm_text"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:background="@drawable/btn_confirm_normal_bg"/>
     </LinearLayout>
 </LinearLayout>
