@@ -66,7 +66,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private TextView mCategoryConfirm;
     private PartCategory.RowsBean currentPartCategory = new PartCategory.RowsBean(); // 当前选择的类别，默认是全部类别
     private TypeCategory.RowsBean currentTypeCategory = new TypeCategory.RowsBean(); // 当前选择的类别，默认是全部类别
-    private StockInfo.RowsBean currentStockInfo = new StockInfo.RowsBean(); // 当前选择的仓库，默认是全部
     private List<StockInfo.RowsBean> currentStockInfoList = new ArrayList<>(); // 当前选择的仓库们可以多选，默认是没有
     private TextView mFilterDrawerPartCategory;
     private LinearLayout mAllType;
@@ -135,15 +134,25 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 // 点击时时候判断点击的仓库是否在集合中，如果再则从集合中删除，否则添加进几个表示选中了
                 StockInfo.RowsBean rowsBean = mStockShowList.get(position);
                 if (currentStockInfoList.contains(rowsBean)) { // 如果包含，则删除，并显示normal背景，右下角的图不显示
+                    mStockShowList.get(position).isChoose = false;
                     currentStockInfoList.remove(rowsBean);
                     view.setBackgroundResource(R.drawable.stock_gv_normal_bg);
                     gvChoose.setVisibility(View.INVISIBLE);
                 } else {
+                    mStockShowList.get(position).isChoose = true;
                     currentStockInfoList.add(rowsBean);
                     view.setBackgroundResource(R.drawable.stock_gv_press_bg);
                     gvChoose.setVisibility(View.VISIBLE);
                 }
-                mChooseStockName.setText(rowsBean.cangk_mc);
+                StringBuilder stockNames = new StringBuilder();
+                for (StockInfo.RowsBean bean : currentStockInfoList) {
+                    stockNames.append(bean.cangk_mc);
+                    stockNames.append("、");
+                }
+                if (!stockNames.toString().equals("")) {
+                    stockNames.deleteCharAt(stockNames.length() - 1);
+                }
+                mChooseStockName.setText(stockNames.toString());
             }
         });
     }
@@ -160,8 +169,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         currentPartCategory.peijlb_mc = "全部";
         currentTypeCategory.chex_dm = "";
         currentTypeCategory.chex_mc = "全部";
-        currentStockInfo.cangk_dm = "";
-        currentStockInfo.cangk_mc = "全部";
         requestData();
     }
 
@@ -175,6 +182,14 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         } else {
             type = currentTypeCategory.chex_mc;
         }
+        StringBuilder stockNos = new StringBuilder();
+        for (StockInfo.RowsBean rowsBean : currentStockInfoList) {
+            stockNos.append(rowsBean.cangk_dm);
+            stockNos.append(",");
+        }
+        if (!stockNos.toString().equals("")) {
+            stockNos.deleteCharAt(stockNos.length() - 1);
+        }
         map.put("method", APIConstants.METHOD_GETKUCSHP);
         map.put("kuc_czyid", loginResult.Id);
         map.put("kuc_key", "");
@@ -182,12 +197,15 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         map.put("kuc_tiaoma", "");
         map.put("kuc_cx", type);
         map.put("kuc_th", mTpName.getText().toString());
-        map.put("kuc_ckdm", currentStockInfo.cangk_dm);
+        map.put("kuc_ckdm", stockNos.toString());
         map.put("kuc_hwone", mLocaterBegin.getText().toString());
         map.put("kuc_hwtwo", mLocaterEnd.getText().toString());
         map.put("pageindex", "1");
 //        map.put("No_map",(new PeijianDisplayShare(LlQueryActivity.this).isImageDisplay()?"1":"0"));
         mStockPresenter.getPartInfoOfStock(map);
+
+        // 把获取仓库信息的过程写在这里，而不是写在每次打开筛选菜单时，否则仓库库不会选中
+        mStockPresenter.getStockInfo(loginResult.Id, 0);
     }
 
     @Override
@@ -248,8 +266,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         currentPartCategory.peijlb_mc = "全部";
         currentTypeCategory.chex_dm = "";
         currentTypeCategory.chex_mc = "全部";
-        currentStockInfo.cangk_dm = "";
-        currentStockInfo.cangk_mc = "全部";
         // 如果当前仓库显示多于6个，那么就收缩回去
         if (mStockShowList.size() > 6) {
             mStockShowList.clear();
@@ -282,11 +298,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
      * 打开筛选的菜单
      */
     private void openFilterDrawer() {
-        showLoadingDialog();
-        LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
-        String czyId = loginResult.Id;
-        mStockPresenter.getStockInfo(czyId, 0);
         mDrawerLayout.openDrawer(mFilterDrawer);
+        mStockInfoAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -377,10 +390,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     public void loadStockInfo(StockInfo stockInfo) {
         mStockShowList.clear();
         mStockAllList.clear();
-        StockInfo.RowsBean rowsBean = new StockInfo.RowsBean();
-        rowsBean.cangk_dm = "";
-        rowsBean.cangk_mc = "全部";
-        mStockAllList.add(rowsBean);
         mStockAllList.addAll(stockInfo.rows);
         // 如果仓库数量大于5，就只显示前5个+一个全部
         if (mStockAllList.size() > 6) {
@@ -393,6 +402,5 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
             mStockShowList.addAll(mStockAllList);
         }
         mStockInfoAdapter.notifyDataSetChanged();
-        hideLoadingDialog();
     }
 }

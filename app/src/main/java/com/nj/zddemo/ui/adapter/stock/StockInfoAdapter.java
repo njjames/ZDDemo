@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nj.zddemo.R;
@@ -41,8 +42,17 @@ public class StockInfoAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.stock_gridview_item, parent, false);
+        StockInfo.RowsBean rowsBean = mList.get(position);
         TextView stockName = view.findViewById(R.id.tv_stock_name);
-        stockName.setText(mList.get(position).cangk_mc);
+        ImageView gvChoose = view.findViewById(R.id.iv_gv_choose);
+        stockName.setText(rowsBean.cangk_mc);
+        if (rowsBean.isChoose) {
+            view.setBackgroundResource(R.drawable.stock_gv_press_bg);
+            gvChoose.setVisibility(View.VISIBLE);
+        }else {
+            view.setBackgroundResource(R.drawable.stock_gv_normal_bg);
+            gvChoose.setVisibility(View.INVISIBLE);
+        }
         return view;
     }
 }
