@@ -32,7 +32,7 @@
 
 
     <color name="gray">#999999</color>
-    <color name="gray_light">#66cccccc</color>
+    <color name="gray_light">#eeeeee</color>
     <color name="gray_dark">#666666</color>
 
     <color name="stock_gv_bg">#11000000</color>

@@ -71,7 +71,7 @@ public class SearchActivity extends BaseMVPActivity {
             }
         });
         // 添加分割线
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mConditionAdapter);
     }
 
@@ -120,7 +120,7 @@ public class SearchActivity extends BaseMVPActivity {
             mSavelist.remove(currentCondition);
         }
         //最后再加一遍
-        mSavelist.add(currentCondition);
+        mSavelist.add(0, currentCondition);
         // 保存到sp中
         mSpUtils.saveList(ConditionUtils.STOCK_CONDITION_KEY, mSavelist);
         Intent result = new Intent();
