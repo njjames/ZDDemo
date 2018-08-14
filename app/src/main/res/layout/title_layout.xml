@@ -36,8 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="编码名称车型"
-            android:textColor="@android:color/black"/>
+            android:text="@string/condition_hint_text"
+            android:textColor="@color/gray"/>
 
         <ImageView
             android:id="@+id/iv_scan"

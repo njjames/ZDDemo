@@ -24,7 +24,8 @@
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.GuideActivity" />
-        <activity android:name=".ui.activity.StockQueryActivity"></activity>
+        <activity android:name=".ui.activity.StockQueryActivity" />
+        <activity android:name=".ui.activity.SearchActivity"></activity>
     </application>
 
 </manifest>

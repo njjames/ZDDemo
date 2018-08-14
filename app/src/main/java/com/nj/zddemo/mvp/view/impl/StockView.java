@@ -11,9 +11,15 @@ import com.nj.zddemo.mvp.view.base.MVPView;
  */
 
 public interface StockView extends MVPView {
+    /**
+     * 这个方法用于所有网络请求的异常回调, 而不是code有返回值的异常
+     * @param msg
+     */
     void onRequestError(String msg);
 
     void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock);
+
+    void onRequestPartInfoError(String msg);
 
     void loadAllPartCategory(PartCategory partCategory);
 

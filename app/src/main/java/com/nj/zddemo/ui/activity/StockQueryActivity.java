@@ -1,5 +1,6 @@
 package com.nj.zddemo.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.haoge.easyandroid.easy.EasySharedPreferences;
@@ -35,6 +37,7 @@ import com.nj.zddemo.ui.adapter.tree.Node;
 import com.nj.zddemo.ui.adapter.tree.PartTreeListViewAdapter;
 import com.nj.zddemo.ui.adapter.tree.TreeListViewAdapter;
 import com.nj.zddemo.ui.adapter.tree.TypeTreeListViewAdapter;
+import com.nj.zddemo.utils.ConditionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +83,12 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private EditText mLocaterEnd;
     private Button mBtnRest;
     private Button mBtnConfirm;
+    private RelativeLayout mSearchLayout;
+    private ImageView mSpeaker;
+    private TextView mCondition;
+    private ImageView mScan;
+    private int REQUEST_CODE = 100;
+    private String mConditionKey = "";
 
     @Override
     protected int getLayoutId() {
@@ -92,6 +101,10 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mDrawerLayout = findViewById(R.id.drawerlayout);
         mFilterDrawer = findViewById(R.id.ll_filter_drawer);
         mCategoryDrawer = findViewById(R.id.ll_category_drawer);
+        mSearchLayout = findViewById(R.id.rl_search);
+        mSpeaker = findViewById(R.id.iv_speaker);
+        mCondition = findViewById(R.id.tv_condition);
+        mScan = findViewById(R.id.iv_scan);
         mFilterDrawerAllCategory = mFilterDrawer.findViewById(R.id.ll_show_all_category);
         mFilterDrawerPartCategory = mFilterDrawer.findViewById(R.id.tv_category_name);
         mFilterDrawerTypeCategory = mFilterDrawer.findViewById(R.id.tv_type_name);
@@ -121,6 +134,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mAllStock.setOnClickListener(this);
         mBtnRest.setOnClickListener(this);
         mBtnConfirm.setOnClickListener(this);
+        mSearchLayout.setOnClickListener(this);
+        mSpeaker.setOnClickListener(this);
+        mScan.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
@@ -136,14 +152,15 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 if (currentStockInfoList.contains(rowsBean)) { // 如果包含，则删除，并显示normal背景，右下角的图不显示
                     mStockShowList.get(position).isChoose = false;
                     currentStockInfoList.remove(rowsBean);
-                    view.setBackgroundResource(R.drawable.stock_gv_normal_bg);
-                    gvChoose.setVisibility(View.INVISIBLE);
+//                    view.setBackgroundResource(R.drawable.stock_gv_normal_bg);
+//                    gvChoose.setVisibility(View.INVISIBLE);
                 } else {
                     mStockShowList.get(position).isChoose = true;
                     currentStockInfoList.add(rowsBean);
-                    view.setBackgroundResource(R.drawable.stock_gv_press_bg);
-                    gvChoose.setVisibility(View.VISIBLE);
+//                    view.setBackgroundResource(R.drawable.stock_gv_press_bg);
+//                    gvChoose.setVisibility(View.VISIBLE);
                 }
+                mStockInfoAdapter.notifyDataSetChanged();
                 StringBuilder stockNames = new StringBuilder();
                 for (StockInfo.RowsBean bean : currentStockInfoList) {
                     stockNames.append(bean.cangk_mc);
@@ -169,10 +186,17 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         currentPartCategory.peijlb_mc = "全部";
         currentTypeCategory.chex_dm = "";
         currentTypeCategory.chex_mc = "全部";
-        requestData();
+        requestStockQuryData();
+        requestStockInfoData();
     }
 
-    private void requestData() {
+    private void requestStockInfoData() {
+        LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
+        // 把获取仓库信息的过程写在这里，而不是写在每次打开筛选菜单时，否则仓库库不会选中
+        mStockPresenter.getStockInfo(loginResult.Id, 0);
+    }
+
+    private void requestStockQuryData() {
         showLoadingDialog();
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
         Map<String, String> map = new HashMap<>();
@@ -192,7 +216,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         }
         map.put("method", APIConstants.METHOD_GETKUCSHP);
         map.put("kuc_czyid", loginResult.Id);
-        map.put("kuc_key", "");
+        map.put("kuc_key", mConditionKey);
         map.put("kuc_lb", currentPartCategory.peijlb_dm);
         map.put("kuc_tiaoma", "");
         map.put("kuc_cx", type);
@@ -203,9 +227,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         map.put("pageindex", "1");
 //        map.put("No_map",(new PeijianDisplayShare(LlQueryActivity.this).isImageDisplay()?"1":"0"));
         mStockPresenter.getPartInfoOfStock(map);
-
-        // 把获取仓库信息的过程写在这里，而不是写在每次打开筛选菜单时，否则仓库库不会选中
-        mStockPresenter.getStockInfo(loginResult.Id, 0);
     }
 
     @Override
@@ -244,10 +265,27 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 clearAll();
                 break;
             case R.id.btn_confirm:
-                requestData();
+                requestStockQuryData();
                 mDrawerLayout.closeDrawer(mFilterDrawer);
                 break;
+            case R.id.rl_search: // 输入查询条件
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                break;
+            case R.id.iv_speaker:
+                break;
+            case R.id.iv_scan:
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == ConditionUtils.STOCK_SEARCH_RESULTCODE) {
+            mConditionKey = data.getStringExtra(ConditionUtils.STOCK_CONDITION_KEY);
+            requestStockQuryData();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -329,6 +367,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
 
     @Override
     public void onRequestError(String msg) {
+        hideLoadingDialog();
         EasyToast.newBuilder().build().show(msg);
     }
 
@@ -338,6 +377,14 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mList.addAll(partInfoOfStock.rows);
         mStockQueryAdapter.notifyDataSetChanged();
         hideLoadingDialog();
+    }
+
+    @Override
+    public void onRequestPartInfoError(String msg) {
+        mList.clear();
+        mStockQueryAdapter.notifyDataSetChanged();
+        hideLoadingDialog();
+        EasyToast.newBuilder().build().show(msg);
     }
 
     @Override

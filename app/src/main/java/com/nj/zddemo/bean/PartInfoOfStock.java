@@ -12,6 +12,8 @@ public class PartInfoOfStock {
     public String count;
     public String totalCout;
     public List<RowsBean> rows;
+    public String code;
+    public String msg;
 
     public static class RowsBean {
         public String reco_no1;

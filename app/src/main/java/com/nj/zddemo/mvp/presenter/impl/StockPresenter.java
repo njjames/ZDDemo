@@ -1,5 +1,7 @@
 package com.nj.zddemo.mvp.presenter.impl;
 
+import android.text.TextUtils;
+
 import com.nj.zddemo.bean.PartCategory;
 import com.nj.zddemo.bean.PartInfoOfStock;
 import com.nj.zddemo.bean.StockInfo;
@@ -44,7 +46,11 @@ public class StockPresenter extends MVPPresenter<StockView> {
                     @Override
                     public void onNext(PartInfoOfStock partInfoOfStock) {
                         if (isViewAttached()) {
-                            getView().loadPartInfoOfStock(partInfoOfStock);
+                            if (!TextUtils.isEmpty(partInfoOfStock.code)) {
+                                getView().onRequestPartInfoError(partInfoOfStock.msg);
+                            } else {
+                                getView().loadPartInfoOfStock(partInfoOfStock);
+                            }
                         }
                     }
 
