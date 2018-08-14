@@ -13,5 +13,6 @@ public class StockInfo {
     public static class RowsBean {
         public String cangk_dm;
         public String cangk_mc;
+        public boolean isChoose;
     }
 }
