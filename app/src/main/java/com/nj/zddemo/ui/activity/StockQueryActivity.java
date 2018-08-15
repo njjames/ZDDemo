@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -46,6 +47,7 @@ import java.util.Map;
 
 public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private List<PartInfoOfStock.RowsBean> mList = new ArrayList<>();
+    private List<PartInfoOfStock.RowsBean> mPreList = new ArrayList<>();
     private List<PartCategory.RowsBean> mPartCategoryList = new ArrayList<>();
     private List<TypeCategory.RowsBean> mTypeCategoryList = new ArrayList<>();
     private List<StockInfo.RowsBean> mStockShowList = new ArrayList<>(); // 用来展示的list，这个是数据源
@@ -89,6 +91,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private ImageView mScan;
     private int REQUEST_CODE = 100;
     private String mConditionKey = "";
+    private String mTotalCount;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -105,6 +109,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mSpeaker = findViewById(R.id.iv_speaker);
         mCondition = findViewById(R.id.tv_condition);
         mScan = findViewById(R.id.iv_scan);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
         mFilterDrawerAllCategory = mFilterDrawer.findViewById(R.id.ll_show_all_category);
         mFilterDrawerPartCategory = mFilterDrawer.findViewById(R.id.tv_category_name);
         mFilterDrawerTypeCategory = mFilterDrawer.findViewById(R.id.tv_type_name);
@@ -118,7 +123,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mLocaterEnd = mFilterDrawer.findViewById(R.id.et_locater_end);
         mBtnRest = mFilterDrawer.findViewById(R.id.btn_reset);
         mBtnConfirm = mFilterDrawer.findViewById(R.id.btn_confirm);
-        mBack = mCategoryDrawer.findViewById(R.id.iv_back);
+        mBack = mCategoryDrawer.findViewById(R.id.iv_category_back);
         mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
         mCategoryDrawerAllCategory = mCategoryDrawer.findViewById(R.id.ll_categorydrawer_all);
         mTopAllCategory = mCategoryDrawer.findViewById(R.id.tv_top_all_catrgory);
@@ -149,17 +154,14 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 ImageView gvChoose = view.findViewById(R.id.iv_gv_choose);
                 // 点击时时候判断点击的仓库是否在集合中，如果再则从集合中删除，否则添加进几个表示选中了
                 StockInfo.RowsBean rowsBean = mStockShowList.get(position);
-                if (currentStockInfoList.contains(rowsBean)) { // 如果包含，则删除，并显示normal背景，右下角的图不显示
+                if (currentStockInfoList.contains(rowsBean)) { // 如果包含，则删除，并把选择状态置为false
                     mStockShowList.get(position).isChoose = false;
                     currentStockInfoList.remove(rowsBean);
-//                    view.setBackgroundResource(R.drawable.stock_gv_normal_bg);
-//                    gvChoose.setVisibility(View.INVISIBLE);
                 } else {
                     mStockShowList.get(position).isChoose = true;
                     currentStockInfoList.add(rowsBean);
-//                    view.setBackgroundResource(R.drawable.stock_gv_press_bg);
-//                    gvChoose.setVisibility(View.VISIBLE);
                 }
+                // noyify,用来更新背景，和右下角的图是否显示
                 mStockInfoAdapter.notifyDataSetChanged();
                 StringBuilder stockNames = new StringBuilder();
                 for (StockInfo.RowsBean bean : currentStockInfoList) {
@@ -170,6 +172,15 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                     stockNames.deleteCharAt(stockNames.length() - 1);
                 }
                 mChooseStockName.setText(stockNames.toString());
+//                preRequestStockQueryData();
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                requestStockQuryData();
             }
         });
     }
@@ -186,6 +197,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         currentPartCategory.peijlb_mc = "全部";
         currentTypeCategory.chex_dm = "";
         currentTypeCategory.chex_mc = "全部";
+        showLoadingDialog();
         requestStockQuryData();
         requestStockInfoData();
     }
@@ -197,7 +209,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     }
 
     private void requestStockQuryData() {
-        showLoadingDialog();
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
         Map<String, String> map = new HashMap<>();
         String type;
@@ -229,6 +240,41 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mStockPresenter.getPartInfoOfStock(map);
     }
 
+    /**
+     * 欲加载配件查询信息，其实就是查询一遍
+     */
+    private void preRequestStockQueryData() {
+        showLoadingDialog();
+        LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
+        Map<String, String> map = new HashMap<>();
+        String type;
+        if (TextUtils.isEmpty(currentTypeCategory.chex_dm)) {
+            type = "";
+        } else {
+            type = currentTypeCategory.chex_mc;
+        }
+        StringBuilder stockNos = new StringBuilder();
+        for (StockInfo.RowsBean rowsBean : currentStockInfoList) {
+            stockNos.append(rowsBean.cangk_dm);
+            stockNos.append(",");
+        }
+        if (!stockNos.toString().equals("")) {
+            stockNos.deleteCharAt(stockNos.length() - 1);
+        }
+        map.put("method", APIConstants.METHOD_GETKUCSHP);
+        map.put("kuc_czyid", loginResult.Id);
+        map.put("kuc_key", mConditionKey);
+        map.put("kuc_lb", currentPartCategory.peijlb_dm);
+        map.put("kuc_tiaoma", "");
+        map.put("kuc_cx", type);
+        map.put("kuc_th", mTpName.getText().toString());
+        map.put("kuc_ckdm", stockNos.toString());
+        map.put("kuc_hwone", mLocaterBegin.getText().toString());
+        map.put("kuc_hwtwo", mLocaterEnd.getText().toString());
+        map.put("pageindex", "1");
+        mStockPresenter.getPartInfoOfStockPre(map);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -239,7 +285,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 getPartCategory();
                 mDrawerLayout.openDrawer(mCategoryDrawer);
                 break;
-            case R.id.iv_back:
+            case R.id.iv_category_back:
                 mDrawerLayout.closeDrawer(mCategoryDrawer);
                 break;
             case R.id.ll_categorydrawer_all:
@@ -265,8 +311,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                 clearAll();
                 break;
             case R.id.btn_confirm:
-                requestStockQuryData();
-                mDrawerLayout.closeDrawer(mFilterDrawer);
+                confirmFilter();
                 break;
             case R.id.rl_search: // 输入查询条件
                 Intent intent = new Intent(this, SearchActivity.class);
@@ -279,10 +324,25 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         }
     }
 
+    // 确定的时候，不在去请求网络，而是把预加载的数据传递过来
+    // 还是去请求网络，不用预加载了
+    private void confirmFilter() {
+        showLoadingDialog();
+        requestStockQuryData();
+        mDrawerLayout.closeDrawer(mFilterDrawer);
+//        mStockQueryAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ConditionUtils.STOCK_SEARCH_RESULTCODE) {
             mConditionKey = data.getStringExtra(ConditionUtils.STOCK_CONDITION_KEY);
+            if (TextUtils.isEmpty(mConditionKey)) {
+                mCondition.setText(R.string.condition_hint_text);
+            } else {
+                mCondition.setText(mConditionKey);
+            }
+            showLoadingDialog();
             requestStockQuryData();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -338,6 +398,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private void openFilterDrawer() {
         mDrawerLayout.openDrawer(mFilterDrawer);
         mStockInfoAdapter.notifyDataSetChanged();
+//        preRequestStockQueryData();
+        // 打开菜单的时候，把总数量带过来
+        mBtnConfirm.setText("确定(共" + mTotalCount + "个商品)");
     }
 
     /**
@@ -354,6 +417,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private void getChooseCategory() {
         mFilterDrawerPartCategory.setText(currentPartCategory.peijlb_mc);
         mFilterDrawerTypeCategory.setText(currentTypeCategory.chex_mc);
+//        preRequestStockQueryData();
         mDrawerLayout.closeDrawer(mCategoryDrawer);
     }
 
@@ -367,6 +431,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
 
     @Override
     public void onRequestError(String msg) {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
         hideLoadingDialog();
         EasyToast.newBuilder().build().show(msg);
     }
@@ -375,14 +442,34 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     public void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock) {
         mList.clear();
         mList.addAll(partInfoOfStock.rows);
+        mTotalCount = partInfoOfStock.totalCout;
         mStockQueryAdapter.notifyDataSetChanged();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        hideLoadingDialog();
+    }
+
+    @Override
+    public void loadPartInfoOfStockPre(PartInfoOfStock partInfoOfStock) {
+        int count= 0;
+        mPreList.clear();
+        if (TextUtils.isEmpty(partInfoOfStock.code)) {
+            mPreList.addAll(partInfoOfStock.rows);
+            count = Integer.parseInt(partInfoOfStock.totalCout);
+        }
+        mBtnConfirm.setText("确定(共" + count + "个商品)");
         hideLoadingDialog();
     }
 
     @Override
     public void onRequestPartInfoError(String msg) {
         mList.clear();
+        mTotalCount = "0";
         mStockQueryAdapter.notifyDataSetChanged();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
         hideLoadingDialog();
         EasyToast.newBuilder().build().show(msg);
     }

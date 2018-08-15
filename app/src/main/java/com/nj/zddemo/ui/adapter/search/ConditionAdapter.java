@@ -4,13 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nj.zddemo.R;
-import com.nj.zddemo.bean.SearchCondition;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class ConditionAdapter extends RecyclerView.Adapter<ConditionAdapter.View
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.condition_list_item, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.mCondition.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClickItemListener != null) {

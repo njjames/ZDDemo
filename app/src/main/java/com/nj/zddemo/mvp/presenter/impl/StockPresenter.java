@@ -169,4 +169,38 @@ public class StockPresenter extends MVPPresenter<StockView> {
                     }
                 });
     }
+
+    public void getPartInfoOfStockPre(Map<String, String> map) {
+        if (!isViewAttached()) {
+            return;
+        }
+        mStockModel.getPartInfoOfStock(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PartInfoOfStock>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscription(d);
+                    }
+
+                    @Override
+                    public void onNext(PartInfoOfStock partInfoOfStock) {
+                        if (isViewAttached()) {
+                            getView().loadPartInfoOfStockPre(partInfoOfStock);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getView().onRequestError("数据加载失败o(╥﹏╥)o");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 }
