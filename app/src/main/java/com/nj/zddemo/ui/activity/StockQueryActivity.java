@@ -32,6 +32,7 @@ import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
 import com.nj.zddemo.mvp.presenter.impl.StockPresenter;
 import com.nj.zddemo.mvp.view.impl.StockView;
 import com.nj.zddemo.ui.activity.base.BaseMVPActivity;
+import com.nj.zddemo.ui.adapter.loadmore.LoadMoreAdapter;
 import com.nj.zddemo.ui.adapter.stock.StockInfoAdapter;
 import com.nj.zddemo.ui.adapter.stock.StockQueryAdapter;
 import com.nj.zddemo.ui.adapter.tree.Node;
@@ -93,6 +94,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private String mConditionKey = "";
     private String mTotalCount;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private LoadMoreAdapter mStockQueryLoadMoreAdapter;
+    private int mCurrentPageIndex = 1;
 
     @Override
     protected int getLayoutId() {
@@ -101,35 +104,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
 
     @Override
     protected void initPage(Bundle savedInstanceState) {
-        mRecyclerView = findViewById(R.id.rv_stock);
-        mDrawerLayout = findViewById(R.id.drawerlayout);
-        mFilterDrawer = findViewById(R.id.ll_filter_drawer);
-        mCategoryDrawer = findViewById(R.id.ll_category_drawer);
-        mSearchLayout = findViewById(R.id.rl_search);
-        mSpeaker = findViewById(R.id.iv_speaker);
-        mCondition = findViewById(R.id.tv_condition);
-        mScan = findViewById(R.id.iv_scan);
-        mSwipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
-        mFilterDrawerAllCategory = mFilterDrawer.findViewById(R.id.ll_show_all_category);
-        mFilterDrawerPartCategory = mFilterDrawer.findViewById(R.id.tv_category_name);
-        mFilterDrawerTypeCategory = mFilterDrawer.findViewById(R.id.tv_type_name);
-        mAllType = mFilterDrawer.findViewById(R.id.ll_show_all_type);
-        mStrockGridView = mFilterDrawer.findViewById(R.id.gv_stock);
-        mChooseStockName = mFilterDrawer.findViewById(R.id.tv_choose_stock_name);
-        mAllStock = mFilterDrawer.findViewById(R.id.ll_show_all_stock);
-        mShowMoreStock = mFilterDrawer.findViewById(R.id.iv_showmore_stock);
-        mTpName = mFilterDrawer.findViewById(R.id.et_tp_name);
-        mLocaterBegin = mFilterDrawer.findViewById(R.id.et_locater_begin);
-        mLocaterEnd = mFilterDrawer.findViewById(R.id.et_locater_end);
-        mBtnRest = mFilterDrawer.findViewById(R.id.btn_reset);
-        mBtnConfirm = mFilterDrawer.findViewById(R.id.btn_confirm);
-        mBack = mCategoryDrawer.findViewById(R.id.iv_category_back);
-        mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
-        mCategoryDrawerAllCategory = mCategoryDrawer.findViewById(R.id.ll_categorydrawer_all);
-        mTopAllCategory = mCategoryDrawer.findViewById(R.id.tv_top_all_catrgory);
-        mTopChoose = mCategoryDrawer.findViewById(R.id.iv_top_choose);
-        mCategoryConfirm = mCategoryDrawer.findViewById(R.id.tv_category_confirm);
-        mFilter = findViewById(R.id.ll_filter);
+        initMainView();
+        initFilterDrawer();
+        initCategoryDrawer();
         mFilter.setOnClickListener(this);
         mFilterDrawerAllCategory.setOnClickListener(this);
         mBack.setOnClickListener(this);
@@ -145,7 +122,16 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
-        mRecyclerView.setAdapter(mStockQueryAdapter);
+        mStockQueryLoadMoreAdapter = new LoadMoreAdapter(mStockQueryAdapter)
+                .setLoadMoreLayoutId(R.layout.load_more_layout)
+                .setOnLoadMoreListener(new LoadMoreAdapter.OnLoadMoreListener() {
+                    @Override
+                    public void onLoadMoreRequested() {
+                        mCurrentPageIndex++;
+                        requestStockQuryData();
+                    }
+                });
+        mRecyclerView.setAdapter(mStockQueryLoadMoreAdapter);
         mStockInfoAdapter = new StockInfoAdapter(mStockShowList);
         mStrockGridView.setAdapter(mStockInfoAdapter);
         mStrockGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,9 +166,48 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
+                mCurrentPageIndex = 1;
                 requestStockQuryData();
             }
         });
+    }
+
+    private void initMainView() {
+        mRecyclerView = findViewById(R.id.rv_stock);
+        mDrawerLayout = findViewById(R.id.drawerlayout);
+        mFilterDrawer = findViewById(R.id.ll_filter_drawer);
+        mCategoryDrawer = findViewById(R.id.ll_category_drawer);
+        mSearchLayout = findViewById(R.id.rl_search);
+        mSpeaker = findViewById(R.id.iv_speaker);
+        mCondition = findViewById(R.id.tv_condition);
+        mScan = findViewById(R.id.iv_scan);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
+        mFilter = findViewById(R.id.ll_filter);
+    }
+
+    private void initCategoryDrawer() {
+        mBack = mCategoryDrawer.findViewById(R.id.iv_category_back);
+        mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
+        mCategoryDrawerAllCategory = mCategoryDrawer.findViewById(R.id.ll_categorydrawer_all);
+        mTopAllCategory = mCategoryDrawer.findViewById(R.id.tv_top_all_catrgory);
+        mTopChoose = mCategoryDrawer.findViewById(R.id.iv_top_choose);
+        mCategoryConfirm = mCategoryDrawer.findViewById(R.id.tv_category_confirm);
+    }
+
+    private void initFilterDrawer() {
+        mFilterDrawerAllCategory = mFilterDrawer.findViewById(R.id.ll_show_all_category);
+        mFilterDrawerPartCategory = mFilterDrawer.findViewById(R.id.tv_category_name);
+        mFilterDrawerTypeCategory = mFilterDrawer.findViewById(R.id.tv_type_name);
+        mAllType = mFilterDrawer.findViewById(R.id.ll_show_all_type);
+        mStrockGridView = mFilterDrawer.findViewById(R.id.gv_stock);
+        mChooseStockName = mFilterDrawer.findViewById(R.id.tv_choose_stock_name);
+        mAllStock = mFilterDrawer.findViewById(R.id.ll_show_all_stock);
+        mShowMoreStock = mFilterDrawer.findViewById(R.id.iv_showmore_stock);
+        mTpName = mFilterDrawer.findViewById(R.id.et_tp_name);
+        mLocaterBegin = mFilterDrawer.findViewById(R.id.et_locater_begin);
+        mLocaterEnd = mFilterDrawer.findViewById(R.id.et_locater_end);
+        mBtnRest = mFilterDrawer.findViewById(R.id.btn_reset);
+        mBtnConfirm = mFilterDrawer.findViewById(R.id.btn_confirm);
     }
 
     @Override
@@ -235,7 +260,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         map.put("kuc_ckdm", stockNos.toString());
         map.put("kuc_hwone", mLocaterBegin.getText().toString());
         map.put("kuc_hwtwo", mLocaterEnd.getText().toString());
-        map.put("pageindex", "1");
+        map.put("pageindex", String.valueOf(mCurrentPageIndex));
 //        map.put("No_map",(new PeijianDisplayShare(LlQueryActivity.this).isImageDisplay()?"1":"0"));
         mStockPresenter.getPartInfoOfStock(map);
     }
@@ -440,10 +465,13 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
 
     @Override
     public void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock) {
-        mList.clear();
+        // 如果是请求的是第一页数据，就清空，否则不清空（这里如果都清空的话会出现一个问题，那就是一上拉加载，就会无限加载）
+        if (mCurrentPageIndex == 1) {
+            mList.clear();
+        }
         mList.addAll(partInfoOfStock.rows);
         mTotalCount = partInfoOfStock.totalCout;
-        mStockQueryAdapter.notifyDataSetChanged();
+        mStockQueryLoadMoreAdapter.notifyDataSetChanged();
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -464,9 +492,14 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
 
     @Override
     public void onRequestPartInfoError(String msg) {
+        // TODO
+        // 在请求之前页数+1了，如果请求失败，页数需要减回去(这有问题)
+        if (mCurrentPageIndex > 1) {
+            mCurrentPageIndex--;
+        }
         mList.clear();
         mTotalCount = "0";
-        mStockQueryAdapter.notifyDataSetChanged();
+        mStockQueryLoadMoreAdapter.notifyDataSetChanged();
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }

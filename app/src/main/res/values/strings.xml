@@ -84,4 +84,6 @@
     <string name="condition_hint_text">编码、名称、车型</string>
     <string name="condition_speaker_text">说出你要的商品</string>
     <string name="search_text">搜索</string>
+
+    <string name="loadmore_text">正在加载更多...</string>
 </resources>
