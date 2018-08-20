@@ -58,7 +58,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private DrawerLayout mDrawerLayout;
     private LinearLayout mFilter;
     private StockPresenter mStockPresenter;
-    private StockQueryAdapter mStockQueryAdapter;
     private View mFilterDrawer;
     private View mCategoryDrawer;
     private LinearLayout mFilterDrawerAllCategory;
@@ -96,6 +95,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoadMoreAdapter mStockQueryLoadMoreAdapter;
     private int mCurrentPageIndex = 1;
+    private StockQueryAdapter mStockQueryAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private int mLastVisibleItemPosition;
 
     @Override
     protected int getLayoutId() {
@@ -119,19 +121,39 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mSearchLayout.setOnClickListener(this);
         mSpeaker.setOnClickListener(this);
         mScan.setOnClickListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mStockQueryAdapter = new StockQueryAdapter(mList);
-        mStockQueryLoadMoreAdapter = new LoadMoreAdapter(mStockQueryAdapter)
-                .setLoadMoreLayoutId(R.layout.load_more_layout)
-                .setOnLoadMoreListener(new LoadMoreAdapter.OnLoadMoreListener() {
-                    @Override
-                    public void onLoadMoreRequested() {
-                        mCurrentPageIndex++;
-                        requestStockQuryData();
+//        mStockQueryLoadMoreAdapter = new LoadMoreAdapter(mStockQueryAdapter)
+//                .setLoadMoreLayoutId(R.layout.footer_item_layout)
+//                .setOnLoadMoreListener(new LoadMoreAdapter.OnLoadMoreListener() {
+//                    @Override
+//                    public void onLoadMoreRequested() {
+//                        mCurrentPageIndex++;
+//                        requestStockQuryData();
+//                    }
+//                });
+        // 给recyclerview添加滚动事件监听
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                // 如果滚动停止
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // 并且最后显示的是footerview
+                    if (mLastVisibleItemPosition == mStockQueryAdapter.getItemCount() - 1) {
+                        requestNextPageStockQueryData();
                     }
-                });
-        mRecyclerView.setAdapter(mStockQueryLoadMoreAdapter);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                mLastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+            }
+        });
+        mRecyclerView.setAdapter(mStockQueryAdapter);
         mStockInfoAdapter = new StockInfoAdapter(mStockShowList);
         mStrockGridView.setAdapter(mStockInfoAdapter);
         mStrockGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -166,7 +188,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
-                mCurrentPageIndex = 1;
                 requestStockQuryData();
             }
         });
@@ -234,6 +255,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     }
 
     private void requestStockQuryData() {
+        mCurrentPageIndex = 1;
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
         Map<String, String> map = new HashMap<>();
         String type;
@@ -266,10 +288,10 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     }
 
     /**
-     * 欲加载配件查询信息，其实就是查询一遍
+     * 加载下一页的数据
      */
-    private void preRequestStockQueryData() {
-        showLoadingDialog();
+    private void requestNextPageStockQueryData() {
+        mCurrentPageIndex++;
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
         Map<String, String> map = new HashMap<>();
         String type;
@@ -296,8 +318,8 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         map.put("kuc_ckdm", stockNos.toString());
         map.put("kuc_hwone", mLocaterBegin.getText().toString());
         map.put("kuc_hwtwo", mLocaterEnd.getText().toString());
-        map.put("pageindex", "1");
-        mStockPresenter.getPartInfoOfStockPre(map);
+        map.put("pageindex", String.valueOf(mCurrentPageIndex));
+        mStockPresenter.getNextPagePartInfoOfStock(map);
     }
 
     @Override
@@ -463,48 +485,57 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         EasyToast.newBuilder().build().show(msg);
     }
 
+    /**
+     * 请求商品数据成功（请求的都是第一页）
+     * @param partInfoOfStock
+     */
     @Override
     public void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock) {
-        // 如果是请求的是第一页数据，就清空，否则不清空（这里如果都清空的话会出现一个问题，那就是一上拉加载，就会无限加载）
-        if (mCurrentPageIndex == 1) {
-            mList.clear();
-        }
+        mList.clear();
         mList.addAll(partInfoOfStock.rows);
         mTotalCount = partInfoOfStock.totalCout;
-        mStockQueryLoadMoreAdapter.notifyDataSetChanged();
+        // 如果当前集合总数和总数相等，表示没有更多数据，如果小于，则表示有更多数据
+        mStockQueryAdapter.updateList(mList.size() < Integer.parseInt(mTotalCount));
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         hideLoadingDialog();
     }
 
-    @Override
-    public void loadPartInfoOfStockPre(PartInfoOfStock partInfoOfStock) {
-        int count= 0;
-        mPreList.clear();
-        if (TextUtils.isEmpty(partInfoOfStock.code)) {
-            mPreList.addAll(partInfoOfStock.rows);
-            count = Integer.parseInt(partInfoOfStock.totalCout);
-        }
-        mBtnConfirm.setText("确定(共" + count + "个商品)");
-        hideLoadingDialog();
-    }
-
+    /**
+     * 请求商品数据失败，指的是数量为0（请求的都是第一页）
+     * @param msg
+     */
     @Override
     public void onRequestPartInfoError(String msg) {
-        // TODO
-        // 在请求之前页数+1了，如果请求失败，页数需要减回去(这有问题)
-        if (mCurrentPageIndex > 1) {
-            mCurrentPageIndex--;
-        }
         mList.clear();
         mTotalCount = "0";
-        mStockQueryLoadMoreAdapter.notifyDataSetChanged();
+        mStockQueryAdapter.updateList(false);
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         hideLoadingDialog();
         EasyToast.newBuilder().build().show(msg);
+    }
+
+    /**
+     * 加载下一页成功
+     * @param partInfoOfStock
+     */
+    @Override
+    public void loadNextPagePartInfoOfStock(PartInfoOfStock partInfoOfStock) {
+        mList.addAll(partInfoOfStock.rows);
+        mStockQueryAdapter.updateList(true); // 请求成功表示获取到了数据，就设置为有更多的数据
+    }
+
+    /**
+     * 加载下一页失败（这里的失败指的是没有更多）
+     * @param msg
+     */
+    @Override
+    public void onRequestNextPagePartInfoError(String msg) {
+        mCurrentPageIndex--;
+        mStockQueryAdapter.updateList(false); //这里的加载失败是指没有更多数据了
     }
 
     @Override
@@ -522,7 +553,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
                     currentPartCategory.peijlb_mc = node.getName();
                 }
             });
-            mCategortListView.setAdapter(mPartTreeAdapter);
+            mCategortListView.setAdapter(mPartTreeAdapter); //这里直接就重绘了
         } catch (Exception e) {
             e.printStackTrace();
         }

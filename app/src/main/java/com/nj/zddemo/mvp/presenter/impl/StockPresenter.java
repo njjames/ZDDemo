@@ -8,7 +8,6 @@ import com.nj.zddemo.bean.StockInfo;
 import com.nj.zddemo.bean.TypeCategory;
 import com.nj.zddemo.mvp.model.impl.StockModel;
 import com.nj.zddemo.mvp.presenter.base.MVPPresenter;
-import com.nj.zddemo.mvp.view.base.MVPView;
 import com.nj.zddemo.mvp.view.impl.StockView;
 
 import java.util.Map;
@@ -170,7 +169,7 @@ public class StockPresenter extends MVPPresenter<StockView> {
                 });
     }
 
-    public void getPartInfoOfStockPre(Map<String, String> map) {
+    public void getNextPagePartInfoOfStock(Map<String, String> map) {
         if (!isViewAttached()) {
             return;
         }
@@ -186,7 +185,11 @@ public class StockPresenter extends MVPPresenter<StockView> {
                     @Override
                     public void onNext(PartInfoOfStock partInfoOfStock) {
                         if (isViewAttached()) {
-                            getView().loadPartInfoOfStockPre(partInfoOfStock);
+                            if (TextUtils.isEmpty(partInfoOfStock.code)) {
+                                getView().loadNextPagePartInfoOfStock(partInfoOfStock);
+                            } else {
+                                getView().onRequestNextPagePartInfoError(partInfoOfStock.msg);
+                            }
                         }
                     }
 

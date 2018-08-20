@@ -19,9 +19,11 @@ public interface StockView extends MVPView {
 
     void loadPartInfoOfStock(PartInfoOfStock partInfoOfStock);
 
-    void loadPartInfoOfStockPre(PartInfoOfStock partInfoOfStock);
-
     void onRequestPartInfoError(String msg);
+
+    void loadNextPagePartInfoOfStock(PartInfoOfStock partInfoOfStock);
+
+    void onRequestNextPagePartInfoError(String msg);
 
     void loadAllPartCategory(PartCategory partCategory);
 

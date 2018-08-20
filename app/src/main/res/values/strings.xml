@@ -86,4 +86,5 @@
     <string name="search_text">搜索</string>
 
     <string name="loadmore_text">正在加载更多...</string>
+    <string name="loadnull_text">已显示全部商品</string>
 </resources>
