@@ -1,7 +1,5 @@
 package com.nj.zddemo.ui.adapter.loadmore;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 /**
+ * 实现上拉加载的adapter
  * Created by Administrator on 2018-08-20.
  */
 
@@ -17,8 +16,6 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     private static final int FOOTER_TYPE = 1;
     private List<T> datas;
     private boolean hasMore;
-
-    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public FooterAdapter(List<T> datas) {
         this.datas = datas;
