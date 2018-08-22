@@ -1,6 +1,10 @@
 package com.nj.zddemo.ui.adapter.stock;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.transition.TransitionManager;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.nj.zddemo.R;
 import com.nj.zddemo.bean.PartInfoOfStock;
@@ -20,30 +24,16 @@ public class StockQueryAdapter extends FooterAdapter<PartInfoOfStock.RowsBean> {
     public StockQueryAdapter(List<PartInfoOfStock.RowsBean> datas) {
         super(datas);
     }
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.stock_recycler_shrink_item, parent, false);
-//        ViewHolder viewHolder = new ViewHolder(parent.getContext(), view);
-//        //1，All children of ConstraintLayout must have ids to use ConstraintSet
-//        //2，控件的一些属性必须都一样，才能达到一致的效果，例如android:gravity="end"
-//        //3，原页面中有，第二个页面没有写的话也会显示出来
-//        final ConstraintLayout constraintLayout = view.findViewById(R.id.constraintlayout);
-//        mConstraintSet_shrink.clone(constraintLayout);
-//        mConstraintSet_spread.clone(parent.getContext(), R.layout.stock_recycler_spread_item);
-//        viewHolder.setOnClickListener(R.id.iv_zoom, new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//            @Override
-//            public void onClick(View v) {
-//                TransitionManager.beginDelayedTransition(constraintLayout);
-//                mConstraintSet_spread.applyTo(constraintLayout);
-//            }
-//        });
-//        return viewHolder;
-//    }
+
     @Override
-    protected int getNormalLayoutId() {
-        return R.layout.stock_recycler_shrink_item;
+    protected int getNormalLayoutId(int layoutType) {
+        if (layoutType == 1) {
+            return R.layout.stock_recycler_shrink_item;
+        } else if (layoutType == 2) {
+            return R.layout.stock_recycler_grid_item;
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -52,14 +42,36 @@ public class StockQueryAdapter extends FooterAdapter<PartInfoOfStock.RowsBean> {
     }
 
     @Override
-    protected void bindNormalHolder(ViewHolder holder, PartInfoOfStock.RowsBean data) {
+    protected void bindNormalHolder(ViewHolder holder, PartInfoOfStock.RowsBean data, int layoutType) {
         holder.setText(R.id.tv_name, data.peij_mc);
         holder.setText(R.id.tv_no, "(" + data.peij_no + ")");
         holder.setText(R.id.tv_tp, data.peij_th);
+        holder.setText(R.id.tv_brand, data.peij_pp);
         holder.setText(R.id.tv_type, data.peij_cx);
         holder.setText(R.id.tv_place, data.peij_cd);
         holder.setText(R.id.tv_price, data.jiag_x1);
         holder.setText(R.id.tv_stock, data.peij_kc);
+        if (layoutType == 1) {
+            final ConstraintLayout constraintLayout = holder.getView(R.id.constraintlayout);
+            mConstraintSet_shrink.clone(constraintLayout);
+            mConstraintSet_spread.clone(holder.getContext(), R.layout.stock_recycler_spread_item);
+            //        ConstraintLayout spreadConstraintLayout = (ConstraintLayout) LayoutInflater.from(holder.getContext()).inflate(R.layout.stock_recycler_spread_item, null);
+            //        spreadConstraintLayout.findViewById(R.id.iv_zoom).setOnClickListener(new View.OnClickListener() {
+            //            @Override
+            //            public void onClick(View v) {
+            //                TransitionManager.beginDelayedTransition(constraintLayout);
+            //                mConstraintSet_shrink.applyTo(constraintLayout);
+            //            }
+            //        });
+            //        mConstraintSet_spread.clone(spreadConstraintLayout);
+            holder.setOnClickListener(R.id.iv_zoom, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TransitionManager.beginDelayedTransition(constraintLayout);
+                    mConstraintSet_spread.applyTo(constraintLayout);
+                }
+            });
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.nj.zddemo.ui.adapter.loadmore;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +18,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     private static final int FOOTER_TYPE = 1;
     private List<T> datas;
     private boolean hasMore;
+    private int layoutType = 1;
 
     public FooterAdapter(List<T> datas) {
         this.datas = datas;
@@ -39,7 +42,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == NORMAL_TYPE) {
-            return ViewHolder.createViewHolder(parent.getContext(), parent, getNormalLayoutId());
+            return ViewHolder.createViewHolder(parent.getContext(), parent, getNormalLayoutId(layoutType));
         } else {
             return ViewHolder.createViewHolder(parent.getContext(), parent, getFooterLayoutId());
         }
@@ -55,7 +58,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
                 holder.itemView.setVisibility(View.GONE);
             }
         } else {
-            bindNormalHolder(holder, datas.get(position));
+            bindNormalHolder(holder, datas.get(position), layoutType);
         }
     }
 
@@ -63,6 +66,34 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     @Override
     public int getItemCount() {
         return datas.size() + 1;
+    }
+
+    // 重写这个方法来处理GridLayoutManager的情况，不处理会出现，加载更多的item不单独占一行，而是成为gridlayout的cell
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return position == getItemCount() - 1 ? gridLayoutManager.getSpanCount() : 1;
+                }
+            });
+        }
+    }
+
+    // 重写这个方法是开处理StaggeredGridLayoutManager的情况
+    @Override
+    public void onViewAttachedToWindow(ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) layoutParams;
+            // setFullSpan方法来设置占领全部空间，也就是如果是加载更多的item就占据全部空间
+            params.setFullSpan(holder.getLayoutPosition() == getItemCount() - 1);
+        }
     }
 
     /**
@@ -82,7 +113,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
      * 正常item的布局
      * @return
      */
-    protected abstract int getNormalLayoutId();
+    protected abstract int getNormalLayoutId(int layoutType);
 
     /**
      * footeritem的布局
@@ -95,7 +126,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
      * @param holder
      * @param data
      */
-    protected abstract void bindNormalHolder(ViewHolder holder, T data);
+    protected abstract void bindNormalHolder(ViewHolder holder, T data, int layoutType);
 
     /**
      * 用来绑定footer的UI和事件
@@ -103,4 +134,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
      */
     protected abstract void bindFooterHolder(ViewHolder holder);
 
+    public void switchLayoutType(int layoutType) {
+        this.layoutType = layoutType;
+    }
 }

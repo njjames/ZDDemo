@@ -48,6 +48,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return viewHolder;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     /**
      * 通过viewId获取控件
      *

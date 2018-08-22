@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/qb_px_2"
+        android:paddingBottom="@dimen/qb_px_2"
+        android:gravity="center_vertical"
+        android:background="@color/gray_light">
+
+        <LinearLayout
+            android:id="@+id/ll_sort_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_sort_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="默认"
+                android:gravity="right"
+                android:textColor="@color/colorPrimary"/>
+
+            <ImageView
+                android:id="@+id/iv_sort_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_drop_down_selected"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sort_stock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="库存"
+            android:gravity="center_horizontal"/>
+
+        <ImageView
+            android:id="@+id/iv_sort_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_linear_mode"
+            android:layout_marginRight="@dimen/qb_px_6"/>
+    </LinearLayout>
+</LinearLayout>

@@ -9,25 +9,40 @@
     android:id="@+id/drawerlayout"
     tools:context="com.nj.zddemo.ui.activity.StockQueryActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/title_layout" />
+        <include layout="@layout/title_layout"
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <include layout="@layout/sort_layout"
+            android:id="@+id/sort_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_layout"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swiperefreshlayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sort_layout">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_stock"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/gray_light">
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
+
+        <include layout="@layout/sort_condition_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sort_layout" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_filter_drawer"
