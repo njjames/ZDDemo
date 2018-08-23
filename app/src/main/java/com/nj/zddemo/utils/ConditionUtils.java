@@ -9,4 +9,6 @@ public class ConditionUtils {
     public static final int STOCK_SEARCH_RESULTCODE = 101;
 
     public static final String STOCK_CONDITION_KEY = "stockcondition";
+
+    public static final String STOCKQUERY_LAYOUTMODE = "stockquerylayoutmode";
 }

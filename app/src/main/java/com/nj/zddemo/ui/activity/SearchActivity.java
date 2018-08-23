@@ -37,7 +37,6 @@ public class SearchActivity extends BaseMVPActivity {
     private RecyclerView mRecyclerView;
     private Button mSpeaker;
     private ConditionAdapter mConditionAdapter;
-    private SPUtils mSpUtils;
     private List<SearchCondition> mSavelist;
     private ImageView mBack;
 
@@ -82,11 +81,10 @@ public class SearchActivity extends BaseMVPActivity {
     @Override
     protected void initData() {
         LoginResult loginResult = EasySharedPreferences.load(LoginResult.class);
-        mSpUtils = new SPUtils(this, "searchcondition");
         // java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to com.nj.zddemo.bean.SearchCondition$ConditionInfo
         // 解决方法就是在调用的时候把类型确定，然后在解析的时候告诉java。
         Type type = new TypeToken<List<SearchCondition>>() {}.getType();
-        mSavelist = mSpUtils.getList(ConditionUtils.STOCK_CONDITION_KEY, type);
+        mSavelist = SPUtils.getList(this, ConditionUtils.STOCK_CONDITION_KEY, type);
         if (mSavelist != null) {
             for (SearchCondition searchCondition : mSavelist) {
                 if (searchCondition.czyid.equals(loginResult.Id)) {
@@ -131,7 +129,7 @@ public class SearchActivity extends BaseMVPActivity {
                 mSavelist = mSavelist.subList(0, 10);
             }
             // 保存到sp中
-            mSpUtils.saveList(ConditionUtils.STOCK_CONDITION_KEY, mSavelist);
+            SPUtils.saveList(this, ConditionUtils.STOCK_CONDITION_KEY, mSavelist);
         }
         Intent result = new Intent();
         result.putExtra(ConditionUtils.STOCK_CONDITION_KEY, conditionStr);

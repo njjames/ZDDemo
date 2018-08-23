@@ -42,6 +42,7 @@ import com.nj.zddemo.ui.adapter.tree.PartTreeListViewAdapter;
 import com.nj.zddemo.ui.adapter.tree.TreeListViewAdapter;
 import com.nj.zddemo.ui.adapter.tree.TypeTreeListViewAdapter;
 import com.nj.zddemo.utils.ConditionUtils;
+import com.nj.zddemo.utils.SPUtils;
 import com.nj.zddemo.view.DoubleDrawerLayout;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private View mFilterDrawer;
     private View mCategoryDrawer;
     private LinearLayout mFilterDrawerAllCategory;
-    private ImageView mBack;
+    private ImageView mCategoryBack;
     private ListView mCategortListView;
     private PartTreeListViewAdapter mPartTreeAdapter;
     private TypeTreeListViewAdapter mTypeTreeAdapter;
@@ -111,6 +112,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     private LinearLayout mSortCondition;
     private ImageView mSortDown;
     private SpaceItemDecoration mSpaceItemDecoration;
+    private ImageView mBack;
 
     @Override
     protected int getLayoutId() {
@@ -125,7 +127,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         initCategoryDrawer();
         mFilter.setOnClickListener(this);
         mFilterDrawerAllCategory.setOnClickListener(this);
-        mBack.setOnClickListener(this);
+        mCategoryBack.setOnClickListener(this);
         mCategoryDrawerAllCategory.setOnClickListener(this);
         mCategoryConfirm.setOnClickListener(this);
         mAllType.setOnClickListener(this);
@@ -135,6 +137,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mSearchLayout.setOnClickListener(this);
         mSpeaker.setOnClickListener(this);
         mScan.setOnClickListener(this);
+        mBack.setOnClickListener(this);
     }
 
     private void initSortView() {
@@ -144,7 +147,6 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mSortDown = findViewById(R.id.iv_sort_down);
         mLayoutMode.setOnClickListener(this);
         mSortAll.setOnClickListener(this);
-
     }
 
     private void initMainView() {
@@ -158,6 +160,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         mScan = findViewById(R.id.iv_scan);
         mSwipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
         mFilter = findViewById(R.id.ll_filter);
+        mBack = findViewById(R.id.iv_back);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -168,8 +171,15 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
         });
         mLinearLayoutManager = new LinearLayoutManager(this);
         mGridLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        // 读取布局方式
+        mCurrentLayoutMode = (int) SPUtils.get(this, ConditionUtils.STOCKQUERY_LAYOUTMODE, 1);
+        if (mCurrentLayoutMode == 1) {
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        } else {
+            mRecyclerView.setLayoutManager(mGridLayoutManager);
+        }
         mStockQueryAdapter = new StockQueryAdapter(mList);
+        mStockQueryAdapter.switchLayoutType(mCurrentLayoutMode);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -197,7 +207,7 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     }
 
     private void initCategoryDrawer() {
-        mBack = mCategoryDrawer.findViewById(R.id.iv_category_back);
+        mCategoryBack = mCategoryDrawer.findViewById(R.id.iv_category_back);
         mCategortListView = mCategoryDrawer.findViewById(R.id.lv_category);
         mCategoryDrawerAllCategory = mCategoryDrawer.findViewById(R.id.ll_categorydrawer_all);
         mTopAllCategory = mCategoryDrawer.findViewById(R.id.tv_top_all_catrgory);
@@ -354,6 +364,9 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
             case R.id.ll_filter:
                 openFilterDrawer();
                 break;
@@ -418,19 +431,16 @@ public class StockQueryActivity extends BaseMVPActivity implements StockView {
             firstVisiablePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
             mLayoutMode.setImageResource(R.drawable.ic_gride_mode);
             mCurrentLayoutMode = 2;
-//            mSpaceItemDecoration = new SpaceItemDecoration(this, R.dimen.qb_px_10);
-//            mRecyclerView.addItemDecoration(mSpaceItemDecoration);
             mRecyclerView.setLayoutManager(mGridLayoutManager);
             mStockQueryAdapter.switchLayoutType(2);
         } else {
             firstVisiablePosition = mGridLayoutManager.findFirstVisibleItemPosition();
             mLayoutMode.setImageResource(R.drawable.ic_linear_mode);
             mCurrentLayoutMode = 1;
-//            mSpaceItemDecoration = new SpaceItemDecoration(this, 0);
-//            mRecyclerView.addItemDecoration(mSpaceItemDecoration);
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
             mStockQueryAdapter.switchLayoutType(1);
         }
+        SPUtils.put(this, ConditionUtils.STOCKQUERY_LAYOUTMODE, mCurrentLayoutMode);
         // setAdapter可以实现切换，但是切换之后总是回到第一条记录
         mRecyclerView.setAdapter(mStockQueryAdapter);
         // 再把recyclerview定位到之前记录的第一条可见的位置

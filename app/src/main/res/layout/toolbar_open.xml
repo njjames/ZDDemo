@@ -3,24 +3,42 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/qb_px_10"
     android:gravity="center_vertical">
 
-    <Button
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="查找配件"
-        android:drawableLeft="@drawable/ic_search"
-        android:drawablePadding="@dimen/qb_px_5"
         android:layout_weight="1"
-        android:gravity="start|center_vertical"
-        android:background="@drawable/btn_page_title_bg"
-        android:textColor="@color/color_text"/>
+        android:paddingLeft="@dimen/qb_px_8"
+        android:paddingRight="@dimen/qb_px_4">
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/iv_search"
+            android:layout_toRightOf="@+id/iv_search"
+            android:layout_centerVertical="true"
+            android:text="查找配件"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/qb_px_1"
+            android:background="@color/gray_dark"
+            android:layout_below="@id/iv_search"/>
+    </RelativeLayout>
 
     <ImageView
-        android:layout_width="@dimen/qb_px_38"
-        android:layout_height="@dimen/qb_px_38"
+        android:layout_width="@dimen/qb_px_30"
+        android:layout_height="@dimen/qb_px_30"
         android:src="@drawable/icon_scan_page"
-        android:padding="@dimen/qb_px_10"/>
-
+        android:padding="@dimen/qb_px_6"/>
 </LinearLayout>
